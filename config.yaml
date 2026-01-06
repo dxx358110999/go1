@@ -1,0 +1,13 @@
+machine_id: 1
+port: 8080
+
+nacos:
+  address: "docker.dxx.com"
+  port: 8848
+  dataId: "dxxlianxi"
+  namespaceId: "844ffd5b-2b7c-45d2-81c3-3d89cae92199"
+  defaultCluster: "DEFAULT"
+  defaultGroup: "DEFAULT_GROUP"
+  username: "nacos"
+  password: "nacos"
+  serviceName: "dxxlianxi_micro"
