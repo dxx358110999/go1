@@ -4,7 +4,7 @@ import (
 	"context"
 	"dxxproject/internal/agreed/my_err"
 	"dxxproject/internal/domain"
-	"dxxproject/internal/jwt_utils/jwt_impl"
+	"dxxproject/internal/jwt_utils/jwt_user"
 	"dxxproject/internal/model"
 	"dxxproject/internal/obj_tranform"
 	"dxxproject/internal/repo"
@@ -22,7 +22,7 @@ type UserSvc struct {
 	snow          sf_utils.SnowflakeIF
 	verifyCodeSvc *verify_code.VerifyCodeSvc
 	userRepo      *repo.Repo
-	jwtUser       *jwt_impl.UserImpl
+	jwtUser       *jwt_user.UserImpl
 }
 
 func (r *UserSvc) RefreshToken(ctx context.Context, refToken string) (token string, err error) {
@@ -70,7 +70,7 @@ func (r *UserSvc) Login(ctx context.Context, domainUser *model.User) (
 	}
 
 	//校验通过,创建token
-	accessToken, err = r.jwtUser.GenerateAccess(&jwt_impl.UserInfo{
+	accessToken, err = r.jwtUser.GenerateAccess(&jwt_user.UserInfo{
 		UserId:   domainUser.UserId,
 		Username: domainUser.Username,
 	})
@@ -78,7 +78,7 @@ func (r *UserSvc) Login(ctx context.Context, domainUser *model.User) (
 		return
 	}
 
-	refreshToken, err = r.jwtUser.GenerateRefresh(&jwt_impl.UserInfo{
+	refreshToken, err = r.jwtUser.GenerateRefresh(&jwt_user.UserInfo{
 		UserId:   domainUser.UserId,
 		Username: domainUser.Username,
 	})
@@ -116,7 +116,7 @@ func NewUserSvc(injector do.Injector) (*UserSvc, error) {
 	snow := do.MustInvoke[sf_utils.SnowflakeIF](injector)
 	verifyCodeSvc := do.MustInvoke[*verify_code.VerifyCodeSvc](injector)
 	userRepo := do.MustInvoke[*repo.Repo](injector)
-	jwtUser := do.MustInvoke[*jwt_impl.UserImpl](injector)
+	jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
 
 	user := &UserSvc{
 		passwordUtil:  passwordUtil,

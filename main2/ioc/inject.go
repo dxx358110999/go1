@@ -3,7 +3,7 @@ package ioc
 import (
 	"dxxproject/config_prepare/app_config"
 	"dxxproject/config_prepare/start_config"
-	"dxxproject/internal/jwt_utils/jwt_impl"
+	"dxxproject/internal/jwt_utils/jwt_user"
 	"dxxproject/main2/basic_info"
 	"dxxproject/pkg/gin/gin_server"
 	"dxxproject/pkg/gorm_db"
@@ -40,7 +40,7 @@ func Inject() (injector do.Injector, err error) {
 
 	do.Provide(injector, zap_ok.NewZapLogger) //zap
 
-	do.Provide(injector, jwt_impl.NewJwtUserImpl) //user jwt
+	do.Provide(injector, jwt_user.NewJwtUserImpl) //user jwt
 
 	do.Provide(injector, sf_utils.NewSnowFlake) //雪花算法
 	_ = do.As[*sf_utils.SnowflakeIMPL, sf_utils.SnowflakeIF](injector)

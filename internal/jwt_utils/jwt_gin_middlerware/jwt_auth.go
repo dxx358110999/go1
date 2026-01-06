@@ -3,7 +3,7 @@ package jwt_gin_middlerware
 import (
 	"dxxproject/internal/agreed/my_err"
 	"dxxproject/internal/dto"
-	"dxxproject/internal/jwt_utils/jwt_impl"
+	"dxxproject/internal/jwt_utils/jwt_user"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
 )
@@ -17,7 +17,7 @@ func JwtAuthMiddleware(injector do.Injector) func(c *gin.Context) {
 		检查access token的合法性
 
 	*/
-	jwtUser := do.MustInvoke[*jwt_impl.UserImpl](injector)
+	jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
 
 	return func(c *gin.Context) {
 		/*
