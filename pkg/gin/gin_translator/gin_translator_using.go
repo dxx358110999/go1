@@ -1,7 +1,7 @@
 package gin_translator
 
 import (
-	"dxxproject/internal/dto"
+	"dxxproject/agreed/dto"
 	"github.com/go-playground/validator/v10"
 	"reflect"
 	"strings"

@@ -1,4 +1,4 @@
-package customized
+package my_regex
 
 import (
 	"github.com/dlclark/regexp2"

@@ -1,9 +1,9 @@
 package jwt_gin_middlerware
 
 import (
-	"dxxproject/internal/agreed/my_err"
-	"dxxproject/internal/dto"
-	"dxxproject/internal/jwt_utils/jwt_user"
+	"dxxproject/agreed/dto"
+	"dxxproject/my/jwt_utils/jwt_user"
+	"dxxproject/my/my_err"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
 )

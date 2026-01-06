@@ -2,18 +2,18 @@ package repo
 
 import (
 	"context"
+	"dxxproject/agreed/model"
 	"dxxproject/internal/cache"
 	"dxxproject/internal/dao"
-	"dxxproject/internal/model"
-	"dxxproject/pkg/my_logger"
+	"dxxproject/my/my_logger"
 	"fmt"
 	"github.com/samber/do/v2"
 )
 
 type Repo struct {
 	myLogger  my_logger.MyLoggerIF
-	userDao   *dao.Dao
-	userCache *cache.CacheUser
+	userDao   *dao.User
+	userCache *cache.User
 }
 
 func (r *Repo) GetUserByUsername(ctx context.Context, username string) (err error, user *model.User) {
@@ -64,8 +64,8 @@ func (r *Repo) Insert(ctx context.Context, user *model.User) (err error) {
 
 func NewUserRepo(injector do.Injector) (*Repo, error) {
 	myLogger := do.MustInvoke[my_logger.MyLoggerIF](injector)
-	userDao := do.MustInvoke[*dao.Dao](injector)
-	userCache := do.MustInvoke[*cache.CacheUser](injector)
+	userDao := do.MustInvoke[*dao.User](injector)
+	userCache := do.MustInvoke[*cache.User](injector)
 	ur := &Repo{
 		myLogger:  myLogger,
 		userDao:   userDao,

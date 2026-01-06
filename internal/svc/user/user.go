@@ -1,15 +1,15 @@
-package user_svc
+package user
 
 import (
 	"context"
-	"dxxproject/internal/agreed/my_err"
-	"dxxproject/internal/domain"
-	"dxxproject/internal/jwt_utils/jwt_user"
-	"dxxproject/internal/model"
-	"dxxproject/internal/obj_tranform"
+	"dxxproject/agreed/domain"
+	"dxxproject/agreed/model"
+	"dxxproject/internal/obj_transform/user_trf"
 	"dxxproject/internal/repo"
 	"dxxproject/internal/svc/verify_code"
-	"dxxproject/my_util"
+	"dxxproject/my/jwt_utils/jwt_user"
+	"dxxproject/my/my_err"
+	"dxxproject/my/my_util"
 	"dxxproject/pkg/password_utils"
 	"dxxproject/pkg/sf_utils"
 	"github.com/pkg/errors"
@@ -17,7 +17,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserSvc struct {
+type User struct {
 	passwordUtil  password_utils.PasswordUtilIF
 	snow          sf_utils.SnowflakeIF
 	verifyCodeSvc *verify_code.VerifyCodeSvc
@@ -25,7 +25,7 @@ type UserSvc struct {
 	jwtUser       *jwt_user.UserImpl
 }
 
-func (r *UserSvc) RefreshToken(ctx context.Context, refToken string) (token string, err error) {
+func (r *User) RefreshToken(ctx context.Context, refToken string) (token string, err error) {
 	//校验refresh token
 	info, err := r.jwtUser.RefreshValid(refToken)
 	if err != nil {
@@ -40,7 +40,7 @@ func (r *UserSvc) RefreshToken(ctx context.Context, refToken string) (token stri
 	return
 }
 
-func (r *UserSvc) Login(ctx context.Context, domainUser *model.User) (
+func (r *User) Login(ctx context.Context, domainUser *model.User) (
 	accessToken string,
 	refreshToken string,
 	err error) {
@@ -85,7 +85,7 @@ func (r *UserSvc) Login(ctx context.Context, domainUser *model.User) (
 	return
 }
 
-func (r *UserSvc) Signup(ctx context.Context, userDomain *domain.User) (err error) {
+func (r *User) Signup(ctx context.Context, userDomain *domain.User) (err error) {
 	//拒绝简单密码
 	ok := my_util.IsValidPassword(userDomain.Password, 3)
 	if !ok {
@@ -101,7 +101,7 @@ func (r *UserSvc) Signup(ctx context.Context, userDomain *domain.User) (err erro
 
 	//--添加用户
 	userDomain.UserId = r.snow.GenSnowFlakeID() //生成 user id
-	userModel := obj_tranform.UserDomainToModel(userDomain)
+	userModel := user_trf.DomainToModel(userDomain)
 
 	err = r.userRepo.Insert(ctx, userModel)
 	if err != nil {
@@ -111,14 +111,14 @@ func (r *UserSvc) Signup(ctx context.Context, userDomain *domain.User) (err erro
 	return
 }
 
-func NewUserSvc(injector do.Injector) (*UserSvc, error) {
+func NewUserSvc(injector do.Injector) (*User, error) {
 	passwordUtil := do.MustInvoke[password_utils.PasswordUtilIF](injector)
 	snow := do.MustInvoke[sf_utils.SnowflakeIF](injector)
 	verifyCodeSvc := do.MustInvoke[*verify_code.VerifyCodeSvc](injector)
 	userRepo := do.MustInvoke[*repo.Repo](injector)
 	jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
 
-	user := &UserSvc{
+	user := &User{
 		passwordUtil:  passwordUtil,
 		snow:          snow,
 		verifyCodeSvc: verifyCodeSvc,

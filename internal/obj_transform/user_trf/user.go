@@ -1,12 +1,12 @@
-package obj_tranform
+package user_trf
 
 import (
-	"dxxproject/internal/domain"
-	"dxxproject/internal/dto"
-	"dxxproject/internal/model"
+	"dxxproject/agreed/domain"
+	"dxxproject/agreed/dto"
+	"dxxproject/agreed/model"
 )
 
-func UserDomainToModel(dUser *domain.User) *model.User {
+func DomainToModel(dUser *domain.User) *model.User {
 
 	return &model.User{
 		UserId:   dUser.UserId,
@@ -16,7 +16,7 @@ func UserDomainToModel(dUser *domain.User) *model.User {
 		Password: dUser.Password,
 	}
 }
-func UserSignupDtoToDomain(dto *dto.UserSignup) *domain.User {
+func SignupDtoToDomain(dto *dto.UserSignup) *domain.User {
 	user := &domain.User{
 		UserId:   0,
 		Email:    dto.Email,
@@ -27,7 +27,7 @@ func UserSignupDtoToDomain(dto *dto.UserSignup) *domain.User {
 	return user
 }
 
-func UserLoginDtoToDomain(dto *dto.UserLogin) *model.User {
+func LoginDtoToDomain(dto *dto.UserLogin) *model.User {
 	user := &model.User{
 		Username: dto.Username,
 		Password: dto.Password,

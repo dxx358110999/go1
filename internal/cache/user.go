@@ -2,8 +2,8 @@ package cache
 
 import (
 	"context"
-	"dxxproject/internal/agreed/my_err"
-	"dxxproject/internal/model"
+	"dxxproject/agreed/model"
+	"dxxproject/my/my_err"
 	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-type CacheUser struct {
+type User struct {
 	redisClient *redis.Client
 }
 
@@ -21,7 +21,7 @@ func keyById(id int64) (key string) {
 	return
 }
 
-func (r *CacheUser) GetById(ctx context.Context, id int64) (err error, user *model.User) {
+func (r *User) GetById(ctx context.Context, id int64) (err error, user *model.User) {
 	/*
 		数据不存在,包会返回redis.Nil,是一种错误
 	*/
@@ -43,7 +43,7 @@ func (r *CacheUser) GetById(ctx context.Context, id int64) (err error, user *mod
 	return
 }
 
-func (r *CacheUser) SetById(ctx context.Context, user *model.User) (err error) {
+func (r *User) SetById(ctx context.Context, user *model.User) (err error) {
 	userExpire := 10 * time.Minute
 	value, err := json.Marshal(user)
 	if err != nil {
@@ -57,9 +57,9 @@ func (r *CacheUser) SetById(ctx context.Context, user *model.User) (err error) {
 	return
 }
 
-func NewUserCache(injector do.Injector) (*CacheUser, error) {
+func NewUserCache(injector do.Injector) (*User, error) {
 	redisClient := do.MustInvoke[*redis.Client](injector)
-	uc := &CacheUser{
+	uc := &User{
 		redisClient: redisClient,
 	}
 	return uc, nil

@@ -1,4 +1,4 @@
-package customized
+package my_regex
 
 import (
 	"fmt"

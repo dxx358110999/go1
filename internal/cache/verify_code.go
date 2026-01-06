@@ -2,18 +2,18 @@ package cache
 
 import (
 	"context"
-	"dxxproject/internal/agreed/my_err"
+	"dxxproject/my/my_err"
 	"github.com/pkg/errors"
 	"github.com/redis/go-redis/v9"
 	"github.com/samber/do/v2"
 	"time"
 )
 
-type VerifyCodeCache struct {
+type VerifyCode struct {
 	redisClient *redis.Client
 }
 
-func (r *VerifyCodeCache) VerifyCodeGet(ctx context.Context, codeKey string) (result string, err error) {
+func (r *VerifyCode) VerifyCodeGet(ctx context.Context, codeKey string) (result string, err error) {
 	result, err = r.redisClient.Get(ctx, codeKey).Result()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
@@ -25,7 +25,7 @@ func (r *VerifyCodeCache) VerifyCodeGet(ctx context.Context, codeKey string) (re
 	return
 }
 
-func (r *VerifyCodeCache) VerifyCodeSet(ctx context.Context, codeKey string, code string, expire time.Duration) (err error) {
+func (r *VerifyCode) VerifyCodeSet(ctx context.Context, codeKey string, code string, expire time.Duration) (err error) {
 	err = r.redisClient.Set(ctx, codeKey, code, expire).Err()
 	if err != nil {
 		return
@@ -33,9 +33,9 @@ func (r *VerifyCodeCache) VerifyCodeSet(ctx context.Context, codeKey string, cod
 	return
 }
 
-func NewVerifyCodeCache(injector do.Injector) (*VerifyCodeCache, error) {
+func NewVerifyCodeCache(injector do.Injector) (*VerifyCode, error) {
 	redisClient := do.MustInvoke[*redis.Client](injector)
-	vc := &VerifyCodeCache{
+	vc := &VerifyCode{
 		redisClient: redisClient,
 	}
 	return vc, nil

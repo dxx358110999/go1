@@ -2,8 +2,7 @@ package gin_server
 
 import (
 	handler2 "dxxproject/internal/handler"
-	"dxxproject/internal/jwt_utils/jwt_gin_middlerware"
-	"dxxproject/internal/user/user_handler"
+	"dxxproject/my/jwt_utils/jwt_gin_middlerware"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
@@ -29,7 +28,7 @@ func AddBasicRoute(engine *gin.Engine) {
 }
 
 func addWebRoute(injector do.Injector, prefixGroup *gin.RouterGroup) {
-	userHandlers := do.MustInvoke[*user_handler.Handlers](injector)
+	userHandlers := do.MustInvoke[*handler2.User](injector)
 
 	userGroup := prefixGroup.Group("/user")
 	userGroup.POST("/signup", userHandlers.Signup)

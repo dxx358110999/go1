@@ -1,18 +1,18 @@
-package user_handler
+package handler
 
 import (
-	"dxxproject/internal/dto"
-	"dxxproject/internal/obj_tranform"
-	"dxxproject/internal/user/user_svc"
+	"dxxproject/agreed/dto"
+	"dxxproject/internal/obj_transform/user_trf"
+	"dxxproject/internal/svc/user"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
 )
 
-type Handlers struct {
-	userSvc *user_svc.UserSvc
+type User struct {
+	userSvc *user.User
 }
 
-func (r *Handlers) Profile(ctx *gin.Context) {
+func (r *User) Profile(ctx *gin.Context) {
 	ctx.JSON(200, dto.ResponseBody{
 		Code:    dto.AppCodeSuccess,
 		Message: "用户资料",
@@ -21,7 +21,7 @@ func (r *Handlers) Profile(ctx *gin.Context) {
 	return
 }
 
-func (r *Handlers) Login(ctx *gin.Context) {
+func (r *User) Login(ctx *gin.Context) {
 	var err error
 
 	// 获取参数和参数校验
@@ -33,7 +33,7 @@ func (r *Handlers) Login(ctx *gin.Context) {
 	}
 
 	//登录校验
-	domainUser := obj_tranform.UserLoginDtoToDomain(loginDto)
+	domainUser := user_trf.LoginDtoToDomain(loginDto)
 	accessToken, refreshToken, err := r.userSvc.Login(ctx, domainUser)
 	if err != nil {
 		ctx.Error(err)
@@ -52,7 +52,7 @@ func (r *Handlers) Login(ctx *gin.Context) {
 
 }
 
-func (r *Handlers) Signup(ctx *gin.Context) {
+func (r *User) Signup(ctx *gin.Context) {
 	var err error
 
 	// 获取参数和参数校验
@@ -64,7 +64,7 @@ func (r *Handlers) Signup(ctx *gin.Context) {
 	}
 
 	//用户注册逻辑
-	domainUser := obj_tranform.UserSignupDtoToDomain(dtoSignup)
+	domainUser := user_trf.SignupDtoToDomain(dtoSignup)
 	err = r.userSvc.Signup(ctx, domainUser)
 	if err != nil {
 		ctx.Error(err)
@@ -80,9 +80,9 @@ func (r *Handlers) Signup(ctx *gin.Context) {
 
 }
 
-func NewUserHandlers(injector do.Injector) (*Handlers, error) {
-	userSvc := do.MustInvoke[*user_svc.UserSvc](injector)
-	u := &Handlers{
+func NewUserHandlers(injector do.Injector) (*User, error) {
+	userSvc := do.MustInvoke[*user.User](injector)
+	u := &User{
 		userSvc: userSvc,
 	}
 	return u, nil

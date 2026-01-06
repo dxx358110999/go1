@@ -2,7 +2,7 @@ package rate_limit
 
 import (
 	"context"
-	"dxxproject/internal/agreed/my_err"
+	"dxxproject/my/my_err"
 	"github.com/go-redis/redis_rate/v10"
 	"github.com/pkg/errors"
 	"github.com/samber/do/v2"

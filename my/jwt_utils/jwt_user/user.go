@@ -2,7 +2,7 @@ package jwt_user
 
 import (
 	"dxxproject/config_prepare/app_config"
-	"dxxproject/internal/agreed/my_err"
+	"dxxproject/my/my_err"
 	"github.com/pkg/errors"
 	"github.com/samber/do/v2"
 	"time"

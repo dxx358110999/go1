@@ -1,7 +1,7 @@
 package gin_middleware
 
 import (
-	"dxxproject/internal/agreed/my_err"
+	"dxxproject/my/my_err"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis_rate/v10"

@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"dxxproject/internal/agreed/biz"
-	"dxxproject/internal/dto"
-	"dxxproject/internal/jwt_utils/jwt_user"
+	"dxxproject/agreed/biz"
+	"dxxproject/agreed/dto"
 	"dxxproject/internal/svc/verify_code"
+	"dxxproject/my/jwt_utils/jwt_user"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
 )

@@ -4,8 +4,8 @@ import (
 	"dxxproject/internal/svc/email"
 	"dxxproject/internal/svc/rate_limit"
 	"dxxproject/internal/svc/sms"
+	"dxxproject/internal/svc/user"
 	"dxxproject/internal/svc/verify_code"
-	"dxxproject/internal/user/user_svc"
 	"dxxproject/pkg/email_provider"
 	"dxxproject/pkg/rate_limiter"
 	"github.com/samber/do/v2"
@@ -37,6 +37,6 @@ func svcIoc(injector do.Injector) (err error) {
 	do.Provide(injector, verify_code.NewVerifyCodeSvc)
 
 	do.Provide(injector, email.NewEmailSvc)
-	do.Provide(injector, user_svc.NewUserSvc)
+	do.Provide(injector, user.NewUserSvc)
 	return
 }

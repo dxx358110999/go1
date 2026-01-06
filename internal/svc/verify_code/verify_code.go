@@ -2,12 +2,12 @@ package verify_code
 
 import (
 	"context"
-	"dxxproject/internal/agreed/biz"
-	"dxxproject/internal/agreed/my_err"
+	"dxxproject/agreed/biz"
 	"dxxproject/internal/cache"
 	"dxxproject/internal/svc/email"
 	"dxxproject/internal/svc/rate_limit"
 	"dxxproject/internal/svc/sms"
+	"dxxproject/my/my_err"
 	"dxxproject/pkg/sms_provider"
 	"fmt"
 	"github.com/pkg/errors"
@@ -19,7 +19,7 @@ type VerifyCodeSvc struct {
 	limitSvc *rate_limit.RateLimitSvc
 	emailSvc *email.EmailSvc
 	smsSvc   sms.SvcSmsIface
-	vcCache  *cache.VerifyCodeCache
+	vcCache  *cache.VerifyCode
 }
 
 func (r *VerifyCodeSvc) preCheckAndStore(ctx context.Context,
@@ -131,7 +131,7 @@ func (r *VerifyCodeSvc) Verify(ctx context.Context,
 
 func NewVerifyCodeSvc(injector do.Injector) (*VerifyCodeSvc, error) {
 	rateLimiter := do.MustInvoke[*rate_limit.RateLimitSvc](injector)
-	vcCache := do.MustInvoke[*cache.VerifyCodeCache](injector)
+	vcCache := do.MustInvoke[*cache.VerifyCode](injector)
 	emailSvc := do.MustInvoke[*email.EmailSvc](injector)
 	smsSvc := do.MustInvoke[sms.SvcSmsIface](injector)
 

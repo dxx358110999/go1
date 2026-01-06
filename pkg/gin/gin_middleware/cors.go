@@ -1,7 +1,7 @@
 package gin_middleware
 
 import (
-	"dxxproject/internal/dto"
+	"dxxproject/agreed/dto"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"time"
