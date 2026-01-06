@@ -1,4 +1,4 @@
-package cache
+package user_svc
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-type User struct {
+type UserCache struct {
 	redisClient *redis.Client
 }
 
@@ -21,7 +21,7 @@ func keyById(id int64) (key string) {
 	return
 }
 
-func (r *User) GetById(ctx context.Context, id int64) (err error, user *model.User) {
+func (r *UserCache) GetById(ctx context.Context, id int64) (err error, user *model.User) {
 	/*
 		数据不存在,包会返回redis.Nil,是一种错误
 	*/
@@ -43,7 +43,7 @@ func (r *User) GetById(ctx context.Context, id int64) (err error, user *model.Us
 	return
 }
 
-func (r *User) SetById(ctx context.Context, user *model.User) (err error) {
+func (r *UserCache) SetById(ctx context.Context, user *model.User) (err error) {
 	userExpire := 10 * time.Minute
 	value, err := json.Marshal(user)
 	if err != nil {
@@ -57,9 +57,9 @@ func (r *User) SetById(ctx context.Context, user *model.User) (err error) {
 	return
 }
 
-func NewUserCache(injector do.Injector) (*User, error) {
+func NewUserCache(injector do.Injector) (*UserCache, error) {
 	redisClient := do.MustInvoke[*redis.Client](injector)
-	uc := &User{
+	uc := &UserCache{
 		redisClient: redisClient,
 	}
 	return uc, nil

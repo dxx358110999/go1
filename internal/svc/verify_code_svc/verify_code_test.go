@@ -1,4 +1,4 @@
-package verify_code
+package verify_code_svc
 
 //func TestCreateCode(t *testing.T) {
 //	vc := new(VerifyCodeSvc)

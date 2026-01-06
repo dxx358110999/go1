@@ -1,14 +1,13 @@
-package verify_code
+package verify_code_svc
 
 import (
 	"context"
 	"dxxproject/agreed/biz"
-	"dxxproject/internal/cache"
-	"dxxproject/internal/svc/email"
-	"dxxproject/internal/svc/rate_limit"
-	"dxxproject/internal/svc/sms"
+	"dxxproject/internal/svc/email_svc"
+	"dxxproject/internal/svc/rate_limit_svc"
+	"dxxproject/internal/svc/sms_svc"
+	"dxxproject/internal/svc/sms_svc/sms_provider"
 	"dxxproject/my/my_err"
-	"dxxproject/pkg/sms_provider"
 	"fmt"
 	"github.com/pkg/errors"
 	"github.com/samber/do/v2"
@@ -16,10 +15,10 @@ import (
 )
 
 type VerifyCodeSvc struct {
-	limitSvc *rate_limit.RateLimitSvc
-	emailSvc *email.EmailSvc
-	smsSvc   sms.SvcSmsIface
-	vcCache  *cache.VerifyCode
+	limitSvc *rate_limit_svc.RateLimitSvc
+	emailSvc *email_svc.EmailSvc
+	smsSvc   sms_svc.SvcSmsIface
+	vcCache  *VerifyCodeCache
 }
 
 func (r *VerifyCodeSvc) preCheckAndStore(ctx context.Context,
@@ -130,10 +129,10 @@ func (r *VerifyCodeSvc) Verify(ctx context.Context,
 }
 
 func NewVerifyCodeSvc(injector do.Injector) (*VerifyCodeSvc, error) {
-	rateLimiter := do.MustInvoke[*rate_limit.RateLimitSvc](injector)
-	vcCache := do.MustInvoke[*cache.VerifyCode](injector)
-	emailSvc := do.MustInvoke[*email.EmailSvc](injector)
-	smsSvc := do.MustInvoke[sms.SvcSmsIface](injector)
+	rateLimiter := do.MustInvoke[*rate_limit_svc.RateLimitSvc](injector)
+	vcCache := do.MustInvoke[*VerifyCodeCache](injector)
+	emailSvc := do.MustInvoke[*email_svc.EmailSvc](injector)
+	smsSvc := do.MustInvoke[sms_svc.SvcSmsIface](injector)
 
 	vc := &VerifyCodeSvc{
 		limitSvc: rateLimiter,

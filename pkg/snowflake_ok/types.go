@@ -1,4 +1,4 @@
-package sf_utils
+package snowflake_ok
 
 type SnowflakeIF interface {
 	GenSnowFlakeID() int64

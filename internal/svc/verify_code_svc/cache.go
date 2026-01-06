@@ -1,4 +1,4 @@
-package cache
+package verify_code_svc
 
 import (
 	"context"
@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-type VerifyCode struct {
+type VerifyCodeCache struct {
 	redisClient *redis.Client
 }
 
-func (r *VerifyCode) VerifyCodeGet(ctx context.Context, codeKey string) (result string, err error) {
+func (r *VerifyCodeCache) VerifyCodeGet(ctx context.Context, codeKey string) (result string, err error) {
 	result, err = r.redisClient.Get(ctx, codeKey).Result()
 	if err != nil {
 		if errors.Is(err, redis.Nil) {
@@ -25,7 +25,7 @@ func (r *VerifyCode) VerifyCodeGet(ctx context.Context, codeKey string) (result 
 	return
 }
 
-func (r *VerifyCode) VerifyCodeSet(ctx context.Context, codeKey string, code string, expire time.Duration) (err error) {
+func (r *VerifyCodeCache) VerifyCodeSet(ctx context.Context, codeKey string, code string, expire time.Duration) (err error) {
 	err = r.redisClient.Set(ctx, codeKey, code, expire).Err()
 	if err != nil {
 		return
@@ -33,9 +33,9 @@ func (r *VerifyCode) VerifyCodeSet(ctx context.Context, codeKey string, code str
 	return
 }
 
-func NewVerifyCodeCache(injector do.Injector) (*VerifyCode, error) {
+func NewVerifyCodeCache(injector do.Injector) (*VerifyCodeCache, error) {
 	redisClient := do.MustInvoke[*redis.Client](injector)
-	vc := &VerifyCode{
+	vc := &VerifyCodeCache{
 		redisClient: redisClient,
 	}
 	return vc, nil

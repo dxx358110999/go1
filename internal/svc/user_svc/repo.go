@@ -1,22 +1,20 @@
-package repo
+package user_svc
 
 import (
 	"context"
 	"dxxproject/agreed/model"
-	"dxxproject/internal/cache"
-	"dxxproject/internal/dao"
 	"dxxproject/my/my_logger"
 	"fmt"
 	"github.com/samber/do/v2"
 )
 
-type Repo struct {
+type UserRepo struct {
 	myLogger  my_logger.MyLoggerIF
-	userDao   *dao.User
-	userCache *cache.User
+	userDao   *UserDao
+	userCache *UserCache
 }
 
-func (r *Repo) GetUserByUsername(ctx context.Context, username string) (err error, user *model.User) {
+func (r *UserRepo) GetUserByUsername(ctx context.Context, username string) (err error, user *model.User) {
 	err, user = r.userDao.GetUserByUsername(ctx, username)
 	if err != nil {
 		return
@@ -32,7 +30,7 @@ func (r *Repo) GetUserByUsername(ctx context.Context, username string) (err erro
 	return
 }
 
-func (r *Repo) GetUserById(ctx context.Context, id int64) (err error, user *model.User) {
+func (r *UserRepo) GetUserById(ctx context.Context, id int64) (err error, user *model.User) {
 	//查缓存
 	err, user = r.userCache.GetById(ctx, id)
 
@@ -58,15 +56,15 @@ func (r *Repo) GetUserById(ctx context.Context, id int64) (err error, user *mode
 	return
 }
 
-func (r *Repo) Insert(ctx context.Context, user *model.User) (err error) {
+func (r *UserRepo) Insert(ctx context.Context, user *model.User) (err error) {
 	return r.userDao.UserInsert(ctx, user)
 }
 
-func NewUserRepo(injector do.Injector) (*Repo, error) {
+func NewUserRepo(injector do.Injector) (*UserRepo, error) {
 	myLogger := do.MustInvoke[my_logger.MyLoggerIF](injector)
-	userDao := do.MustInvoke[*dao.User](injector)
-	userCache := do.MustInvoke[*cache.User](injector)
-	ur := &Repo{
+	userDao := do.MustInvoke[*UserDao](injector)
+	userCache := do.MustInvoke[*UserCache](injector)
+	ur := &UserRepo{
 		myLogger:  myLogger,
 		userDao:   userDao,
 		userCache: userCache,

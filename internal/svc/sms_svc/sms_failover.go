@@ -1,8 +1,8 @@
-package sms
+package sms_svc
 
 import (
 	"context"
-	"dxxproject/pkg/sms_provider"
+	"dxxproject/internal/svc/sms_svc/sms_provider"
 	"github.com/samber/do/v2"
 	"sync"
 	"sync/atomic"

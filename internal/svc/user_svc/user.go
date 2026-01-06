@@ -1,31 +1,30 @@
-package user
+package user_svc
 
 import (
 	"context"
 	"dxxproject/agreed/domain"
 	"dxxproject/agreed/model"
 	"dxxproject/internal/obj_transform/user_trf"
-	"dxxproject/internal/repo"
-	"dxxproject/internal/svc/verify_code"
+	"dxxproject/internal/svc/verify_code_svc"
 	"dxxproject/my/jwt_utils/jwt_user"
 	"dxxproject/my/my_err"
 	"dxxproject/my/my_util"
 	"dxxproject/my/passwd_util"
-	"dxxproject/pkg/sf_utils"
+	"dxxproject/pkg/snowflake_ok"
 	"github.com/pkg/errors"
 	"github.com/samber/do/v2"
 	"gorm.io/gorm"
 )
 
-type User struct {
+type UserSvc struct {
 	passwordUtil  passwd_util.PasswordUtilIF
-	snow          sf_utils.SnowflakeIF
-	verifyCodeSvc *verify_code.VerifyCodeSvc
-	userRepo      *repo.Repo
+	snow          snowflake_ok.SnowflakeIF
+	verifyCodeSvc *verify_code_svc.VerifyCodeSvc
+	userRepo      *UserRepo
 	jwtUser       *jwt_user.UserImpl
 }
 
-func (r *User) RefreshToken(ctx context.Context, refToken string) (token string, err error) {
+func (r *UserSvc) RefreshToken(ctx context.Context, refToken string) (token string, err error) {
 	//校验refresh token
 	info, err := r.jwtUser.RefreshValid(refToken)
 	if err != nil {
@@ -40,7 +39,7 @@ func (r *User) RefreshToken(ctx context.Context, refToken string) (token string,
 	return
 }
 
-func (r *User) Login(ctx context.Context, domainUser *model.User) (
+func (r *UserSvc) Login(ctx context.Context, domainUser *model.User) (
 	accessToken string,
 	refreshToken string,
 	err error) {
@@ -85,7 +84,7 @@ func (r *User) Login(ctx context.Context, domainUser *model.User) (
 	return
 }
 
-func (r *User) Signup(ctx context.Context, userDomain *domain.User) (err error) {
+func (r *UserSvc) Signup(ctx context.Context, userDomain *domain.User) (err error) {
 	//拒绝简单密码
 	ok := my_util.IsValidPassword(userDomain.Password, 3)
 	if !ok {
@@ -111,14 +110,14 @@ func (r *User) Signup(ctx context.Context, userDomain *domain.User) (err error) 
 	return
 }
 
-func NewUserSvc(injector do.Injector) (*User, error) {
+func NewUserSvc(injector do.Injector) (*UserSvc, error) {
 	passwordUtil := do.MustInvoke[passwd_util.PasswordUtilIF](injector)
-	snow := do.MustInvoke[sf_utils.SnowflakeIF](injector)
-	verifyCodeSvc := do.MustInvoke[*verify_code.VerifyCodeSvc](injector)
-	userRepo := do.MustInvoke[*repo.Repo](injector)
+	snow := do.MustInvoke[snowflake_ok.SnowflakeIF](injector)
+	verifyCodeSvc := do.MustInvoke[*verify_code_svc.VerifyCodeSvc](injector)
+	userRepo := do.MustInvoke[*UserRepo](injector)
 	jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
 
-	user := &User{
+	user := &UserSvc{
 		passwordUtil:  passwordUtil,
 		snow:          snow,
 		verifyCodeSvc: verifyCodeSvc,

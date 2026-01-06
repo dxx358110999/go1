@@ -1,7 +1,7 @@
-package email
+package email_svc
 
 import (
-	"dxxproject/pkg/email_provider"
+	"dxxproject/internal/svc/email_svc/email_provider"
 	"github.com/samber/do/v2"
 )
 

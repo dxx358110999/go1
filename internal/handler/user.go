@@ -3,13 +3,13 @@ package handler
 import (
 	"dxxproject/agreed/dto"
 	"dxxproject/internal/obj_transform/user_trf"
-	"dxxproject/internal/svc/user"
+	"dxxproject/internal/svc/user_svc"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
 )
 
 type User struct {
-	userSvc *user.User
+	userSvc *user_svc.UserSvc
 }
 
 func (r *User) Profile(ctx *gin.Context) {
@@ -81,7 +81,7 @@ func (r *User) Signup(ctx *gin.Context) {
 }
 
 func NewUserHandlers(injector do.Injector) (*User, error) {
-	userSvc := do.MustInvoke[*user.User](injector)
+	userSvc := do.MustInvoke[*user_svc.UserSvc](injector)
 	u := &User{
 		userSvc: userSvc,
 	}

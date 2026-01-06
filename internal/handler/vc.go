@@ -3,7 +3,7 @@ package handler
 import (
 	"dxxproject/agreed/biz"
 	"dxxproject/agreed/dto"
-	"dxxproject/internal/svc/verify_code"
+	"dxxproject/internal/svc/verify_code_svc"
 	"dxxproject/my/jwt_utils/jwt_user"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
@@ -11,7 +11,7 @@ import (
 
 type VerifyCodeHandlers struct {
 	jwtUser *jwt_user.UserImpl
-	vcSvc   *verify_code.VerifyCodeSvc
+	vcSvc   *verify_code_svc.VerifyCodeSvc
 }
 
 func (r *VerifyCodeHandlers) SendUserRegisterCodeByEmail(ctx *gin.Context) {
@@ -76,7 +76,7 @@ func (r *VerifyCodeHandlers) SendUserRegisterCodeBySms(ctx *gin.Context) {
 
 func NewVerifyCodeHandlers(injector do.Injector) (*VerifyCodeHandlers, error) {
 	jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
-	vcSvc := do.MustInvoke[*verify_code.VerifyCodeSvc](injector)
+	vcSvc := do.MustInvoke[*verify_code_svc.VerifyCodeSvc](injector)
 	vc := &VerifyCodeHandlers{
 		jwtUser: jwtUser,
 		vcSvc:   vcSvc,

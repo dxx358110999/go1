@@ -1,4 +1,4 @@
-package verify_code
+package verify_code_svc
 
 import (
 	"math/rand"

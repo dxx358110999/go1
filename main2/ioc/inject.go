@@ -11,7 +11,7 @@ import (
 	"dxxproject/pkg/gorm_db"
 	"dxxproject/pkg/nacos_ok"
 	"dxxproject/pkg/redis_client"
-	"dxxproject/pkg/sf_utils"
+	"dxxproject/pkg/snowflake_ok"
 	"dxxproject/pkg/zap_ok"
 	"github.com/samber/do/v2"
 )
@@ -42,8 +42,8 @@ func Inject() (injector do.Injector, err error) {
 
 	do.Provide(injector, jwt_user.NewJwtUserImpl) //user jwt
 
-	do.Provide(injector, sf_utils.NewSnowFlake) //雪花算法
-	err = do.As[*sf_utils.SnowflakeIMPL, sf_utils.SnowflakeIF](injector)
+	do.Provide(injector, snowflake_ok.NewSnowFlake) //雪花算法
+	err = do.As[*snowflake_ok.SnowflakeIMPL, snowflake_ok.SnowflakeIF](injector)
 
 	do.Provide(injector, passwd_util.NewPasswordUtil) //密码加密
 
@@ -74,35 +74,35 @@ func Inject() (injector do.Injector, err error) {
 	return
 }
 
-func injectMod(injector do.Injector) (err error) {
-	err = smsProviderIoc(injector)
+func injectMod(injector do.Injector) error {
+	err := rateSvc(injector)
 	if err != nil {
-		return
+		return err
 	}
 
-	err = cacheIoc(injector)
+	err = smsSvc(injector)
 	if err != nil {
-		return
+		return err
 	}
 
-	err = daoIoc(injector)
+	err = emailSvc(injector)
 	if err != nil {
-		return
+		return err
 	}
 
-	err = repoIoc(injector)
+	err = verifyCodeSvc(injector)
 	if err != nil {
-		return
+		return err
 	}
 
-	err = svcIoc(injector)
+	err = userSvc(injector)
 	if err != nil {
-		return
+		return err
 	}
 
 	err = handlerIoc(injector)
 	if err != nil {
-		return
+		return err
 	}
 
 	return err

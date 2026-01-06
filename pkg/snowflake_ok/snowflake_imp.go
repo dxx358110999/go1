@@ -1,4 +1,4 @@
-package sf_utils
+package snowflake_ok
 
 import (
 	"dxxproject/config_prepare/app_config"
@@ -7,6 +7,16 @@ import (
 	"github.com/samber/do/v2"
 	"time"
 )
+
+type SnowflakeIMPL struct {
+	node *snowflake.Node
+}
+
+func (s *SnowflakeIMPL) GenSnowFlakeID() int64 {
+	return s.node.Generate().Int64()
+}
+
+var _ SnowflakeIF = &SnowflakeIMPL{}
 
 func NewSnowFlake(injector do.Injector) (snow *SnowflakeIMPL, err error) {
 	appConfig := do.MustInvoke[*app_config.AppConfig](injector)

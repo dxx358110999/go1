@@ -1,4 +1,4 @@
-package dao
+package user_svc
 
 import (
 	"context"
@@ -7,11 +7,11 @@ import (
 	"gorm.io/gorm"
 )
 
-type User struct {
+type UserDao struct {
 	db *gorm.DB
 }
 
-func (r *User) GetUserById(ctx context.Context, id int64) (err error, user *model.User) {
+func (r *UserDao) GetUserById(ctx context.Context, id int64) (err error, user *model.User) {
 	us, err := gorm.G[model.User](r.db).Where("id = ?", id).Take(ctx)
 
 	if err != nil {
@@ -22,7 +22,7 @@ func (r *User) GetUserById(ctx context.Context, id int64) (err error, user *mode
 	return
 }
 
-func (r *User) UserInsert(ctx context.Context, user *model.User) (err error) {
+func (r *UserDao) UserInsert(ctx context.Context, user *model.User) (err error) {
 	/*
 		添加用户
 	*/
@@ -35,7 +35,7 @@ func (r *User) UserInsert(ctx context.Context, user *model.User) (err error) {
 	return
 }
 
-func (r *User) GetUserByUsername(ctx context.Context, username string) (err error, user *model.User) {
+func (r *UserDao) GetUserByUsername(ctx context.Context, username string) (err error, user *model.User) {
 	/*
 		检查指定用户名的用户是否存在
 	*/
@@ -51,9 +51,9 @@ func (r *User) GetUserByUsername(ctx context.Context, username string) (err erro
 
 }
 
-func NewUserDao(injector do.Injector) (*User, error) {
+func NewUserDao(injector do.Injector) (*UserDao, error) {
 	db := do.MustInvoke[*gorm.DB](injector)
-	ud := &User{
+	ud := &UserDao{
 		db: db,
 	}
 	return ud, nil

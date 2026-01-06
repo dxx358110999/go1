@@ -1,4 +1,4 @@
-package rate_limit
+package rate_limit_svc
 
 import (
 	"context"
