@@ -6,10 +6,10 @@ import (
 	"dxxproject/main2/basic_info"
 	"dxxproject/my/jwt_utils/jwt_user"
 	"dxxproject/my/my_logger"
+	"dxxproject/my/passwd_util"
 	"dxxproject/pkg/gin/gin_server"
 	"dxxproject/pkg/gorm_db"
 	"dxxproject/pkg/nacos_ok"
-	"dxxproject/pkg/password_utils"
 	"dxxproject/pkg/redis_client"
 	"dxxproject/pkg/sf_utils"
 	"dxxproject/pkg/zap_ok"
@@ -45,7 +45,7 @@ func Inject() (injector do.Injector, err error) {
 	do.Provide(injector, sf_utils.NewSnowFlake) //雪花算法
 	err = do.As[*sf_utils.SnowflakeIMPL, sf_utils.SnowflakeIF](injector)
 
-	do.Provide(injector, password_utils.NewPasswordUtil) //密码加密
+	do.Provide(injector, passwd_util.NewPasswordUtil) //密码加密
 
 	do.Provide(injector, my_logger.NewMyLogger) //自定义的logger
 	err = do.As[*my_logger.MyLoggerZapImpl, my_logger.MyLoggerIF](injector)

@@ -1,4 +1,4 @@
-package password_utils
+package passwd_util
 
 import "github.com/samber/do/v2"
 

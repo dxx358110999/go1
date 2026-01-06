@@ -10,7 +10,7 @@ import (
 	"dxxproject/my/jwt_utils/jwt_user"
 	"dxxproject/my/my_err"
 	"dxxproject/my/my_util"
-	"dxxproject/pkg/password_utils"
+	"dxxproject/my/passwd_util"
 	"dxxproject/pkg/sf_utils"
 	"github.com/pkg/errors"
 	"github.com/samber/do/v2"
@@ -18,7 +18,7 @@ import (
 )
 
 type User struct {
-	passwordUtil  password_utils.PasswordUtilIF
+	passwordUtil  passwd_util.PasswordUtilIF
 	snow          sf_utils.SnowflakeIF
 	verifyCodeSvc *verify_code.VerifyCodeSvc
 	userRepo      *repo.Repo
@@ -112,7 +112,7 @@ func (r *User) Signup(ctx context.Context, userDomain *domain.User) (err error) 
 }
 
 func NewUserSvc(injector do.Injector) (*User, error) {
-	passwordUtil := do.MustInvoke[password_utils.PasswordUtilIF](injector)
+	passwordUtil := do.MustInvoke[passwd_util.PasswordUtilIF](injector)
 	snow := do.MustInvoke[sf_utils.SnowflakeIF](injector)
 	verifyCodeSvc := do.MustInvoke[*verify_code.VerifyCodeSvc](injector)
 	userRepo := do.MustInvoke[*repo.Repo](injector)

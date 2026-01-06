@@ -1,4 +1,4 @@
-package password_utils
+package passwd_util
 
 type PasswordUtilIF interface {
 	Encrypt(pass string) (err error, enPass string)
