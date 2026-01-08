@@ -9,12 +9,12 @@ import (
 	"github.com/samber/do/v2"
 )
 
-type VerifyCodeHandlers struct {
+type VerifyCodeHdl struct {
 	jwtUser *jwt_user.UserImpl
 	vcSvc   *verify_code_svc.VerifyCodeSvc
 }
 
-func (r *VerifyCodeHandlers) SendUserRegisterCodeByEmail(ctx *gin.Context) {
+func (r *VerifyCodeHdl) SendUserRegisterCodeByEmail(ctx *gin.Context) {
 	var err error
 
 	// 获取参数和参数校验
@@ -41,7 +41,7 @@ func (r *VerifyCodeHandlers) SendUserRegisterCodeByEmail(ctx *gin.Context) {
 
 }
 
-func (r *VerifyCodeHandlers) SendUserRegisterCodeBySms(ctx *gin.Context) {
+func (r *VerifyCodeHdl) SendUserRegisterCodeBySms(ctx *gin.Context) {
 	type Phone struct {
 		Phone string `json:"phone"`
 	}
@@ -74,10 +74,10 @@ func (r *VerifyCodeHandlers) SendUserRegisterCodeBySms(ctx *gin.Context) {
 
 }
 
-func NewVerifyCodeHandlers(injector do.Injector) (*VerifyCodeHandlers, error) {
+func NewVerifyCodeHdl(injector do.Injector) (*VerifyCodeHdl, error) {
 	jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
 	vcSvc := do.MustInvoke[*verify_code_svc.VerifyCodeSvc](injector)
-	vc := &VerifyCodeHandlers{
+	vc := &VerifyCodeHdl{
 		jwtUser: jwtUser,
 		vcSvc:   vcSvc,
 	}

@@ -41,7 +41,7 @@ func addWebRoute(injector do.Injector, prefixGroup *gin.RouterGroup) {
 }
 
 func addVerifyCodeRoute(injector do.Injector, prefixGroup *gin.RouterGroup) {
-	vcHandlers := do.MustInvoke[*handlers.VerifyCodeHandlers](injector)
+	vcHandlers := do.MustInvoke[*handlers.VerifyCodeHdl](injector)
 
 	group := prefixGroup.Group("/code")
 	group.POST("/registerCodeSendEmail", vcHandlers.SendUserRegisterCodeByEmail)
