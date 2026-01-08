@@ -17,8 +17,8 @@ import (
 )
 
 type UserSvc struct {
-	passwordUtil  passwd_util.PasswordUtilIF
-	snow          snowflake_ok.SnowflakeIF
+	passwordUtil  passwd_util.PasswordUtilIface
+	snow          snowflake_ok.SnowflakeIface
 	verifyCodeSvc *verify_code_svc.VerifyCodeSvc
 	userRepo      *UserRepo
 	jwtUser       *jwt_user.UserImpl
@@ -111,8 +111,8 @@ func (r *UserSvc) Signup(ctx context.Context, userDomain *domain.User) (err erro
 }
 
 func NewUserSvc(injector do.Injector) (*UserSvc, error) {
-	passwordUtil := do.MustInvoke[passwd_util.PasswordUtilIF](injector)
-	snow := do.MustInvoke[snowflake_ok.SnowflakeIF](injector)
+	passwordUtil := do.MustInvoke[passwd_util.PasswordUtilIface](injector)
+	snow := do.MustInvoke[snowflake_ok.SnowflakeIface](injector)
 	verifyCodeSvc := do.MustInvoke[*verify_code_svc.VerifyCodeSvc](injector)
 	userRepo := do.MustInvoke[*UserRepo](injector)
 	jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)

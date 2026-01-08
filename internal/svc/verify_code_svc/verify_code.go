@@ -22,38 +22,38 @@ type VerifyCodeSvc struct {
 }
 
 func (r *VerifyCodeSvc) preCheckAndStore(ctx context.Context,
-	codeFat *VerifyCodeFat,
+	regCode *RegisterCode,
 ) (err error) {
 	/*
 		每分钟发送频率
 		每天发送频率
 	*/
 
-	err = r.limitSvc.LimitGetAllow(ctx, codeFat.codeMinuteLimitKey, 1, 1*time.Minute) //每分钟发送1条
+	err = r.limitSvc.GetAllow(ctx, regCode.MinuteLimitKey, 1, 1*time.Minute) //每分钟发送1条
 	if err != nil {
 		return
 	}
 
-	err = r.limitSvc.LimitGetAllow(ctx, codeFat.codeDayLimitKey, 5, 1*24*time.Hour) //每天发送5条
+	err = r.limitSvc.GetAllow(ctx, regCode.DayLimitKey, 5, 1*24*time.Hour) //每天发送5条
 	if err != nil {
 		return
 	}
 
-	err = r.vcCache.VerifyCodeSet(ctx, codeFat.codeKey, codeFat.code, codeFat.expire)
+	err = r.vcCache.VerifyCodeSet(ctx, regCode.Key, regCode.Code, regCode.Expire)
 	if err != nil {
 		err = errors.Wrap(err, "cache写入验证码失败")
 		return
 	}
 
 	//发送新的验证,清空尝试验证次数
-	_ = r.limitSvc.LimitClear(ctx, codeFat.tryVerifyCountKey)
+	_ = r.limitSvc.LimitClear(ctx, regCode.TryVerifyCountKey)
 
 	return
 }
 
 func (r *VerifyCodeSvc) SendCodeByEmail(ctx context.Context, biz biz.Biz, toEmail string) (err error) {
 	code := generateCode()
-	codeFat := NewVerifyCodeFat(biz.Code, toEmail, code)
+	codeFat := NewRegisterCode(biz.Code, toEmail, code)
 	err = r.preCheckAndStore(ctx, codeFat)
 	if err != nil {
 		return err
@@ -77,7 +77,7 @@ func (r *VerifyCodeSvc) SendCodeBySms(ctx context.Context,
 	params map[string]string,
 ) (err error) {
 	code := generateCode()
-	codeFat := NewVerifyCodeFat(phoneNumber, biz.Code, code)
+	codeFat := NewRegisterCode(phoneNumber, biz.Code, code)
 	err = r.preCheckAndStore(ctx, codeFat)
 	if err != nil {
 		return err
@@ -86,7 +86,7 @@ func (r *VerifyCodeSvc) SendCodeBySms(ctx context.Context,
 	// 2. 构建邮件内容
 
 	phoneNumbers := []string{phoneNumber}
-	params["code"] = code
+	params["Code"] = code
 
 	smsInfo := sms_provider.SmsSendInfo{
 		PhoneNumbers: phoneNumbers,
@@ -99,7 +99,7 @@ func (r *VerifyCodeSvc) SendCodeBySms(ctx context.Context,
 	if err != nil {
 		return err
 	}
-	//fmt.Printf("验证码 %s 已发送至 %s\n", code, toEmail)
+	//fmt.Printf("验证码 %s 已发送至 %s\n", Code, toEmail)
 	return
 }
 
@@ -107,16 +107,16 @@ func (r *VerifyCodeSvc) Verify(ctx context.Context,
 	bizCode string,
 	registerFeature string,
 	userInputCode string,
-) (err error) {
-	codeFat := NewVerifyCodeFat(bizCode, registerFeature, userInputCode)
+) error {
+	codeFat := NewRegisterCode(bizCode, registerFeature, userInputCode)
 
 	//限制验证次数
-	err = r.limitSvc.LimitGetAllow(ctx, codeFat.tryVerifyCountKey, 3, 10*time.Minute) //有效期内,允许验证3次
+	err := r.limitSvc.GetAllow(ctx, codeFat.TryVerifyCountKey, 3, 10*time.Minute) //有效期内,允许验证3次
 	if err != nil {
-		return
+		return err
 	}
 
-	signedCode, err := r.vcCache.VerifyCodeGet(ctx, codeFat.codeKey)
+	signedCode, err := r.vcCache.VerifyCodeGet(ctx, codeFat.Key)
 	if err != nil {
 		return err
 	}
@@ -125,7 +125,7 @@ func (r *VerifyCodeSvc) Verify(ctx context.Context,
 		return my_err.ErrVerifyCodeNotMatch
 	}
 
-	return
+	return nil
 }
 
 func NewVerifyCodeSvc(injector do.Injector) (*VerifyCodeSvc, error) {

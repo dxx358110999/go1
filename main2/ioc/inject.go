@@ -3,7 +3,12 @@ package ioc
 import (
 	"dxxproject/config_prepare/app_config"
 	"dxxproject/config_prepare/start_config"
-	"dxxproject/main2/basic_info"
+	"dxxproject/internal/handlers"
+	"dxxproject/internal/svc/email_svc"
+	"dxxproject/internal/svc/rate_limit_svc"
+	"dxxproject/internal/svc/sms_svc"
+	"dxxproject/internal/svc/user_svc"
+	"dxxproject/internal/svc/verify_code_svc"
 	"dxxproject/my/jwt_utils/jwt_user"
 	"dxxproject/my/my_logger"
 	"dxxproject/my/passwd_util"
@@ -25,85 +30,39 @@ func Inject() (injector do.Injector, err error) {
 
 	injector = do.New()
 
-	/*
-		基础信息
-		包含:
-		本机IP
-	*/
-	do.Provide(injector, basic_info.NewBasicInfo) //基本信息
+	injectPkg(injector) //注入基础Pkg
 
-	do.Provide(injector, start_config.NewStartConfig) //读取本地启动配置
+	injectSvc(injector) //注入服务
 
-	do.Provide(injector, nacos_ok.NewNacosInstance) //nacos instance
+	handlers.Provide(injector) //注入handler
 
-	do.Provide(injector, app_config.NewAppConfig) //app config
-
-	do.Provide(injector, zap_ok.NewZapLogger) //zap
-
-	do.Provide(injector, jwt_user.NewJwtUserImpl) //user jwt
-
-	do.Provide(injector, snowflake_ok.NewSnowFlake) //雪花算法
-	err = do.As[*snowflake_ok.SnowflakeIMPL, snowflake_ok.SnowflakeIF](injector)
-
-	do.Provide(injector, passwd_util.NewPasswordUtil) //密码加密
-
-	do.Provide(injector, my_logger.NewMyLogger) //自定义的logger
-	err = do.As[*my_logger.MyLoggerZapImpl, my_logger.MyLoggerIF](injector)
-
-	/*
-		sms
-	*/
-	//err, aliSms := ali_sms.NewAliSms(appConfig.AliSms) //没有处理错误
-
-	//初始化sqlx
-	//if err = dao2.SqlxInit(AppConfig.MysqlConfig); err != nil {
-	//	fmt.Printf("init mysql failed, err:%v\n", err)
-	//	return
-	//}
-	//defer dao2.DbClose() // 程序退出关闭数据库连接
-
-	do.Provide(injector, gorm_db.NewGormDb)           //初始化gorm
-	do.Provide(injector, redis_client.NewRedisClient) //初始化redis连接
-
-	err = injectMod(injector)
-	if err != nil {
-		return nil, err
-	}
-	do.Provide(injector, gin_server.NewGinServer)
+	gin_server.Provide(injector) //注入gin
 
 	return
 }
 
-func injectMod(injector do.Injector) error {
-	err := rateSvc(injector)
-	if err != nil {
-		return err
-	}
+func injectPkg(injector do.Injector) {
 
-	err = smsSvc(injector)
-	if err != nil {
-		return err
-	}
+	start_config.Provide(injector) //启动配置
+	nacos_ok.Provide(injector)     //nacos instance
+	app_config.Provide(injector)   //app config
+	zap_ok.Provide(injector)       //zap
 
-	err = emailSvc(injector)
-	if err != nil {
-		return err
-	}
+	jwt_user.Provide(injector)     //user jwt
+	snowflake_ok.Provide(injector) //雪花算法
+	passwd_util.Provide(injector)  //密码加密
+	my_logger.Provide(injector)    //自定义的logger
 
-	err = verifyCodeSvc(injector)
-	if err != nil {
-		return err
-	}
+	gorm_db.Provide(injector)      //初始化gorm
+	redis_client.Provide(injector) //初始化redis连接
 
-	err = userSvc(injector)
-	if err != nil {
-		return err
-	}
+}
 
-	err = handlerIoc(injector)
-	if err != nil {
-		return err
-	}
+func injectSvc(injector do.Injector) {
+	rate_limit_svc.Provide(injector)
+	sms_svc.Provide(injector)
+	email_svc.Provide(injector)
+	verify_code_svc.Provide(injector)
+	user_svc.Provide(injector)
 
-	return err
 }

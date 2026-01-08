@@ -1,6 +1,6 @@
 package passwd_util
 
-type PasswordUtilIF interface {
+type PasswordUtilIface interface {
 	Encrypt(pass string) (err error, enPass string)
 	Compare(enPass, pass string) (err error)
 }

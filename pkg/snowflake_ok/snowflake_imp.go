@@ -16,7 +16,7 @@ func (s *SnowflakeIMPL) GenSnowFlakeID() int64 {
 	return s.node.Generate().Int64()
 }
 
-var _ SnowflakeIF = &SnowflakeIMPL{}
+var _ SnowflakeIface = &SnowflakeIMPL{}
 
 func NewSnowFlake(injector do.Injector) (snow *SnowflakeIMPL, err error) {
 	appConfig := do.MustInvoke[*app_config.AppConfig](injector)
@@ -37,4 +37,12 @@ func NewSnowFlake(injector do.Injector) (snow *SnowflakeIMPL, err error) {
 
 	snow = &SnowflakeIMPL{node}
 	return
+}
+
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewSnowFlake)
+	err := do.As[*SnowflakeIMPL, SnowflakeIface](injector)
+	if err != nil {
+		panic(err)
+	}
 }

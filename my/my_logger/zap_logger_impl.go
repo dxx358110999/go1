@@ -51,3 +51,11 @@ func NewMyLogger(injector do.Injector) (*MyLoggerZapImpl, error) {
 	}
 	return myLogger, nil
 }
+
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewMyLogger)
+	err := do.As[*MyLoggerZapImpl, MyLoggerIF](injector)
+	if err != nil {
+		panic(err)
+	}
+}

@@ -5,8 +5,8 @@ import (
 	"net"
 )
 
-func GetOutboundIP() (err error, ip net.IP) {
-	conn, err := net.Dial("udp", "223.5.5.5:53")
+func GetOutboundIP(address string) (err error, ip net.IP) {
+	conn, err := net.Dial("udp", address)
 	if err != nil {
 		fmt.Println("获取IP地址失败", err)
 		return

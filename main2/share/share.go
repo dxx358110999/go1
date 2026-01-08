@@ -11,16 +11,16 @@ import (
 
 type Share struct {
 	rateLimiter *redis_rate.Limiter
-	pwUtil      passwd_util.PasswordUtilIF
-	snow        snowflake_ok.SnowflakeIF
+	pwUtil      passwd_util.PasswordUtilIface
+	snow        snowflake_ok.SnowflakeIface
 	emailSmtp   *email_provider.SmtpIMPL
 	smsIsp      sms_provider.SmsProviderIF
 }
 
 func NewShare(injector do.Injector) *Share {
 	rateLimiter := do.MustInvoke[*redis_rate.Limiter](injector)
-	pwUtil := do.MustInvoke[passwd_util.PasswordUtilIF](injector)
-	snow := do.MustInvoke[snowflake_ok.SnowflakeIF](injector)
+	pwUtil := do.MustInvoke[passwd_util.PasswordUtilIface](injector)
+	snow := do.MustInvoke[snowflake_ok.SnowflakeIface](injector)
 	emailSmtp := do.MustInvoke[*email_provider.SmtpIMPL](injector)
 	smsIsp := do.MustInvoke[sms_provider.SmsProviderIF](injector)
 

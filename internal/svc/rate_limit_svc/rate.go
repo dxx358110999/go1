@@ -13,7 +13,7 @@ type RateLimitSvc struct {
 	limiter *redis_rate.Limiter
 }
 
-func (r *RateLimitSvc) LimitGetAllow(ctx context.Context, key string, rate int, period time.Duration) (err error) {
+func (r *RateLimitSvc) GetAllow(ctx context.Context, key string, rate int, period time.Duration) (err error) {
 	limitRule := redis_rate.Limit{
 		Rate:   rate,
 		Burst:  rate,

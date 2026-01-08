@@ -6,34 +6,33 @@ import (
 	"time"
 )
 
-type VerifyCodeFat struct {
-	code string
-
-	codeKey            string
-	codeMinuteLimitKey string
-	codeDayLimitKey    string
-	tryVerifyCountKey  string
-	expire             time.Duration
+type RegisterCode struct {
+	Code              string // 实际 code
+	Key               string //存放key
+	MinuteLimitKey    string
+	DayLimitKey       string
+	TryVerifyCountKey string
+	Expire            time.Duration
 }
 
-func NewVerifyCodeFat(
+func NewRegisterCode(
 	registerFeature string,
 	bizCode string,
 	code string,
-) (vc *VerifyCodeFat) {
+) (vc *RegisterCode) {
 	registerFeature = toolkit.StringToBase64RemoveEqual(registerFeature) //注册特征转base64
 
 	codeKey := fmt.Sprintf("verifyCode:%s:%s", bizCode, registerFeature)
 	codeMinuteLimitKey := fmt.Sprintf("verifyCode:%s:%s:minuteLimit", bizCode, registerFeature)
 	codeDayLimitKey := fmt.Sprintf("verifyCode:%s:%s:dayLimit", bizCode, registerFeature)
 	tryVerifyCountKey := fmt.Sprintf("verifyCode:%s:%s:tryCount", bizCode, registerFeature)
-	vc = &VerifyCodeFat{
-		code:               code,
-		codeKey:            codeKey,
-		codeMinuteLimitKey: codeMinuteLimitKey,
-		codeDayLimitKey:    codeDayLimitKey,
-		tryVerifyCountKey:  tryVerifyCountKey,
-		expire:             10 * time.Minute,
+	vc = &RegisterCode{
+		Code:              code,
+		Key:               codeKey,
+		MinuteLimitKey:    codeMinuteLimitKey,
+		DayLimitKey:       codeDayLimitKey,
+		TryVerifyCountKey: tryVerifyCountKey,
+		Expire:            10 * time.Minute,
 	}
 	return
 }

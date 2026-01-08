@@ -25,7 +25,9 @@ func (r *VerifyCodeCache) VerifyCodeGet(ctx context.Context, codeKey string) (re
 	return
 }
 
-func (r *VerifyCodeCache) VerifyCodeSet(ctx context.Context, codeKey string, code string, expire time.Duration) (err error) {
+func (r *VerifyCodeCache) VerifyCodeSet(ctx context.Context,
+	codeKey string,
+	code string, expire time.Duration) (err error) {
 	err = r.redisClient.Set(ctx, codeKey, code, expire).Err()
 	if err != nil {
 		return
@@ -34,7 +36,7 @@ func (r *VerifyCodeCache) VerifyCodeSet(ctx context.Context, codeKey string, cod
 }
 
 func NewVerifyCodeCache(injector do.Injector) (*VerifyCodeCache, error) {
-	redisClient := do.MustInvoke[*redis.Client](injector)
+	redisClient := do.MustInvoke[*redis.Client](injector) //redis client
 	vc := &VerifyCodeCache{
 		redisClient: redisClient,
 	}

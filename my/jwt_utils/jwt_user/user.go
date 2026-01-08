@@ -132,4 +132,8 @@ func NewJwtUserImpl(injector do.Injector) (impl *UserImpl, err error) {
 	return
 }
 
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewJwtUserImpl)
+}
+
 //var _ UserIface = new(UserImpl) //检查实现

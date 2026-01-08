@@ -2,6 +2,7 @@ package gin_middleware
 
 import (
 	"dxxproject/my/my_err"
+	"dxxproject/pkg/gin/gin_translator"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	ut "github.com/go-playground/universal-translator"
@@ -16,10 +17,16 @@ type ErrorHandler struct {
 	Translator ut.Translator
 }
 
-func NewErrorHandler(
-	translator ut.Translator) *ErrorHandler {
+func NewErrorHandler() *ErrorHandler {
+	//翻译器
+	trans := &gin_translator.MyTranslator{}
+	err := trans.Init("zh")
+	if err != nil {
+		panic(err)
+	}
+
 	mid := &ErrorHandler{
-		Translator: translator,
+		Translator: trans.Translator,
 	}
 	return mid
 }

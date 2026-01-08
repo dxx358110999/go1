@@ -31,19 +31,19 @@ NacosAddress
 NacosPort
 */
 
-func readEnvConfig() (*envConfig, error) {
-	//从环境中读取配置
-	//viper.SetEnvPrefix("app") // 设置前缀
-	viper.AllowEmptyEnv(true) //读取空
-	viper.AutomaticEnv()      // 自动读取环境变量
-	envCfg := &envConfig{}
-	err := viper.Unmarshal(envCfg)
-	if err != nil {
-		return nil, err
-	}
-
-	return envCfg, nil
-}
+//func readEnvConfig() (*envConfig, error) {
+//	//从环境中读取配置
+//	//viper.SetEnvPrefix("app") // 设置前缀
+//	viper.AllowEmptyEnv(true) //读取空
+//	viper.AutomaticEnv()      // 自动读取环境变量
+//	envCfg := &envConfig{}
+//	err := viper.Unmarshal(envCfg)
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	return envCfg, nil
+//}
 
 func newStartConfig() (startCfg *StartConfig, err error) {
 	//默认配置
@@ -106,4 +106,8 @@ func NewStartConfig(injector do.Injector) (startCfg *StartConfig, err error) {
 
 	startCfg = config
 	return
+}
+
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewStartConfig) //读取本地启动配置
 }

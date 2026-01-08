@@ -66,3 +66,7 @@ func NewZapLogger(injector do.Injector) (zapLogger *zap.Logger, err error) {
 	zapLogger = logger
 	return
 }
+
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewZapLogger)
+}

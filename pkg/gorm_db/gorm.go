@@ -35,3 +35,7 @@ func NewGormDb(injector do.Injector) (db *gorm.DB, err error) {
 
 	return
 }
+
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewGormDb)
+}

@@ -1,8 +1,8 @@
 package start_config
 
-type envConfig struct {
-	StartConfigPath string `mapstructure:"START_CONFIG_PATH"`
-}
+//type envConfig struct {
+//	StartConfigPath string `mapstructure:"START_CONFIG_PATH"`
+//}
 
 type Nacos struct {
 	Address        string `mapstructure:"address"`

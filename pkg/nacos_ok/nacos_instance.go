@@ -2,7 +2,8 @@ package nacos_ok
 
 import (
 	"dxxproject/config_prepare/start_config"
-	"dxxproject/main2/basic_info"
+	"dxxproject/toolkit"
+	"fmt"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
@@ -19,39 +20,6 @@ type NacosInstance struct {
 	//内部创建
 	NamingClient naming_client.INamingClient
 	ConfigClient config_client.IConfigClient
-}
-
-func NewNacosInstance(injector do.Injector) (*NacosInstance, error) {
-	/*
-		需要考虑读取环境
-	*/
-
-	//取出依赖
-	startConfig := do.MustInvoke[*start_config.StartConfig](injector)
-	bi := do.MustInvoke[*basic_info.BasicInfo](injector)
-
-	serverConfig, err := NewNacosServerConfig(startConfig)
-	if err != nil {
-		return nil, err
-	}
-
-	clientConfig, err := NewNacosClientConfig(startConfig, bi.LocalIp)
-	if err != nil {
-		return nil, err
-	}
-
-	instance := &NacosInstance{
-		ClientConfig: clientConfig,
-		ServerConfig: serverConfig,
-		NamingClient: nil,
-		ConfigClient: nil,
-	}
-
-	err = instance.build()
-	if err != nil {
-		return nil, err
-	}
-	return instance, nil
 }
 
 func (r *NacosInstance) build() (err error) {
@@ -138,7 +106,7 @@ func (r *NacosInstance) Deregister() (err error) {
 	if err != nil {
 		log.Fatalf("nacos反注册失败: %s", err.Error())
 	} else {
-		log.Printf("nacos反注册成功! %b", success)
+		log.Printf("nacos反注册成功! %t", success)
 	}
 	return
 }
@@ -163,3 +131,43 @@ func (r *NacosInstance) Deregister() (err error) {
 //
 //	return
 //}
+
+func NewNacosInstance(injector do.Injector) (*NacosInstance, error) {
+	/*
+		需要考虑读取环境
+	*/
+
+	//取出依赖
+	startConfig := do.MustInvoke[*start_config.StartConfig](injector)
+
+	//读取本机ip
+	err, ip := toolkit.GetOutboundIP(fmt.Sprintf("%s:%d", startConfig.Address, startConfig.Port))
+	localIp := ip.String()
+
+	serverConfig, err := NewNacosServerConfig(startConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	clientConfig, err := NewNacosClientConfig(startConfig, localIp)
+	if err != nil {
+		return nil, err
+	}
+
+	instance := &NacosInstance{
+		ClientConfig: clientConfig,
+		ServerConfig: serverConfig,
+		NamingClient: nil,
+		ConfigClient: nil,
+	}
+
+	err = instance.build()
+	if err != nil {
+		return nil, err
+	}
+	return instance, nil
+}
+
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewNacosInstance)
+}

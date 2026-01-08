@@ -1,5 +1,5 @@
 package snowflake_ok
 
-type SnowflakeIF interface {
+type SnowflakeIface interface {
 	GenSnowFlakeID() int64
 }

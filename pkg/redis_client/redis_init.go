@@ -26,3 +26,7 @@ func NewRedisClient(injector do.Injector) (redisClient *redis.Client, err error)
 	}
 	return
 }
+
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewRedisClient)
+}

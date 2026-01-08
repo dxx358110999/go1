@@ -1,7 +1,7 @@
 package gin_server
 
 import (
-	handler2 "dxxproject/internal/handler"
+	"dxxproject/internal/handlers"
 	"dxxproject/my/jwt_utils/jwt_gin_middlerware"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
@@ -28,7 +28,7 @@ func AddBasicRoute(engine *gin.Engine) {
 }
 
 func addWebRoute(injector do.Injector, prefixGroup *gin.RouterGroup) {
-	userHandlers := do.MustInvoke[*handler2.User](injector)
+	userHandlers := do.MustInvoke[*handlers.UserHandler](injector)
 
 	userGroup := prefixGroup.Group("/user")
 	userGroup.POST("/signup", userHandlers.Signup)
@@ -41,7 +41,7 @@ func addWebRoute(injector do.Injector, prefixGroup *gin.RouterGroup) {
 }
 
 func addVerifyCodeRoute(injector do.Injector, prefixGroup *gin.RouterGroup) {
-	vcHandlers := do.MustInvoke[*handler2.VerifyCodeHandlers](injector)
+	vcHandlers := do.MustInvoke[*handlers.VerifyCodeHandlers](injector)
 
 	group := prefixGroup.Group("/code")
 	group.POST("/registerCodeSendEmail", vcHandlers.SendUserRegisterCodeByEmail)

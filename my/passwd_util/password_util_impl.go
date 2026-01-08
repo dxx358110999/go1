@@ -7,7 +7,7 @@ import (
 type PasswordUtilImpl struct {
 }
 
-var _ PasswordUtilIF = (*PasswordUtilImpl)(nil)
+var _ PasswordUtilIface = (*PasswordUtilImpl)(nil)
 
 func (rec *PasswordUtilImpl) Encrypt(pass string) (err error, enPass string) {
 	bytes, err := bcrypt.GenerateFromPassword(

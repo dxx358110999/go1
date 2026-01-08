@@ -34,3 +34,6 @@ func NewAppConfig(injector do.Injector) (appConfig *AppConfig, err error) {
 
 	return
 }
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewAppConfig)
+}

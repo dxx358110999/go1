@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"dxxproject/agreed/dto"
@@ -8,11 +8,11 @@ import (
 	"github.com/samber/do/v2"
 )
 
-type User struct {
+type UserHandler struct {
 	userSvc *user_svc.UserSvc
 }
 
-func (r *User) Profile(ctx *gin.Context) {
+func (r *UserHandler) Profile(ctx *gin.Context) {
 	ctx.JSON(200, dto.ResponseBody{
 		Code:    dto.AppCodeSuccess,
 		Message: "用户资料",
@@ -21,7 +21,7 @@ func (r *User) Profile(ctx *gin.Context) {
 	return
 }
 
-func (r *User) Login(ctx *gin.Context) {
+func (r *UserHandler) Login(ctx *gin.Context) {
 	var err error
 
 	// 获取参数和参数校验
@@ -52,7 +52,7 @@ func (r *User) Login(ctx *gin.Context) {
 
 }
 
-func (r *User) Signup(ctx *gin.Context) {
+func (r *UserHandler) Signup(ctx *gin.Context) {
 	var err error
 
 	// 获取参数和参数校验
@@ -80,9 +80,9 @@ func (r *User) Signup(ctx *gin.Context) {
 
 }
 
-func NewUserHandlers(injector do.Injector) (*User, error) {
+func NewUserHandlers(injector do.Injector) (*UserHandler, error) {
 	userSvc := do.MustInvoke[*user_svc.UserSvc](injector)
-	u := &User{
+	u := &UserHandler{
 		userSvc: userSvc,
 	}
 	return u, nil

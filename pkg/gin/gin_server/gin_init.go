@@ -3,7 +3,6 @@ package gin_server
 import (
 	"dxxproject/config_prepare/app_config"
 	"dxxproject/pkg/gin/gin_middleware"
-	"dxxproject/pkg/gin/gin_translator"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
 )
@@ -35,15 +34,8 @@ func NewGinServer(injector do.Injector) (engine *gin.Engine, err error) {
 }
 
 func useMiddleware(injector do.Injector, engine *gin.Engine) (err error) {
-	//翻译器
-	myTrans := &gin_translator.MyTranslator{}
-	err = myTrans.Init("zh")
-	if err != nil {
-		return
-	}
 
-	//gin中间件
-	errorHandler := gin_middleware.NewErrorHandler(myTrans.Translator)
+	errorHandler := gin_middleware.NewErrorHandler() //较为复杂,封装为对象
 
 	//添加中间件
 	//Engine.Use(middlewares.RateLimit(2*time.Second, 1) )
@@ -56,4 +48,8 @@ func useMiddleware(injector do.Injector, engine *gin.Engine) (err error) {
 	//store := cookie.NewStore([]byte("secret"))
 	//Engine.Use(sessions.Sessions("mysession", store)) //使用session
 	return
+}
+
+func Provide(injector do.Injector) {
+	do.Provide(injector, NewGinServer)
 }
