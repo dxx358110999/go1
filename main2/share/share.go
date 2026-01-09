@@ -1,8 +1,8 @@
 package share
 
 import (
-	"dxxproject/internal/svc/email_svc/email_provider"
-	"dxxproject/internal/svc/sms_svc/sms_provider"
+	"dxxproject/internal/email/email_provider"
+	"dxxproject/internal/sms/sms_provider"
 	"dxxproject/my/passwd_util"
 	"dxxproject/pkg/snowflake_ok"
 	"github.com/go-redis/redis_rate/v10"
