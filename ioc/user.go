@@ -17,29 +17,28 @@ import (
 )
 
 func User(injector do.Injector) {
-	redisClient := do.MustInvoke[*redis.Client](injector)
-	db := do.MustInvoke[*gorm.DB](injector)
-	myLogger := do.MustInvoke[my_logger.MyLoggerIF](injector)
-	userDao := do.MustInvoke[*dao.UserDao](injector)
-	userCache := do.MustInvoke[*cache.User](injector)
-	passwordUtil := do.MustInvoke[passwd_util.PasswordUtilIface](injector)
-	snow := do.MustInvoke[snowflake_ok.SnowflakeIface](injector)
-	userRepo := do.MustInvoke[*repo.UserRepo](injector)
-	jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
-
-	verifyCodeSvc := do.MustInvoke[*vcSvc.VerifyCodeSvc](injector)
-	userSvc := do.MustInvoke[*svc.UserSvc](injector)
 
 	do.Provide(injector, func(injector do.Injector) (*cache.User, error) {
+		redisClient := do.MustInvoke[*redis.Client](injector)
 		return cache.NewUserCache(redisClient)
 	})
 	do.Provide(injector, func(injector do.Injector) (*dao.UserDao, error) {
+		db := do.MustInvoke[*gorm.DB](injector)
 		return dao.NewUserDao(db)
 	})
 	do.Provide(injector, func(injector do.Injector) (*repo.UserRepo, error) {
+		myLogger := do.MustInvoke[my_logger.MyLoggerIF](injector)
+		userDao := do.MustInvoke[*dao.UserDao](injector)
+		userCache := do.MustInvoke[*cache.User](injector)
 		return repo.NewUserRepo(myLogger, userDao, userCache)
 	})
 	do.Provide(injector, func(injector do.Injector) (*svc.UserSvc, error) {
+		passwordUtil := do.MustInvoke[passwd_util.PasswordUtilIface](injector)
+		snow := do.MustInvoke[snowflake_ok.SnowflakeIface](injector)
+		userRepo := do.MustInvoke[*repo.UserRepo](injector)
+		jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
+		verifyCodeSvc := do.MustInvoke[*vcSvc.VerifyCodeSvc](injector)
+
 		return svc.NewUserSvc(
 			passwordUtil,
 			snow,
@@ -49,6 +48,7 @@ func User(injector do.Injector) {
 		)
 	})
 	do.Provide(injector, func(injector do.Injector) (*hdl.UserHandler, error) {
+		userSvc := do.MustInvoke[*svc.UserSvc](injector)
 		return hdl.NewUserHandlers(userSvc)
 	})
 

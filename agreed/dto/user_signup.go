@@ -16,12 +16,3 @@ type UserSignup struct {
 	Code         string  `json:"code" binding:"required"`
 	RegisterType string  `json:"registerType" binding:"required"`
 }
-
-type UserLogin struct {
-	/*
-		登录
-		http请求
-	*/
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
