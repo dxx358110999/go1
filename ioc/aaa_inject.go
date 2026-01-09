@@ -18,8 +18,6 @@ func Inject() (injector do.Injector, err error) {
 
 	injectModule(injector) //注入服务
 
-	VerifyCode(injector) //注入handler
-
 	gin.Provide(injector) //注入gin
 
 	return
@@ -31,4 +29,6 @@ func injectModule(injector do.Injector) {
 	Email(injector)
 	User(injector)
 	Article(injector)
+	VerifyCode(injector)
+
 }
