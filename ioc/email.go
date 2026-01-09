@@ -1,8 +1,9 @@
 package ioc
 
 import (
+	"dxxproject/config_prepare/app_config"
 	"dxxproject/internal/email"
-	email_provider2 "dxxproject/internal/email/email_provider"
+	"dxxproject/internal/email/email_provider"
 	"github.com/samber/do/v2"
 )
 
@@ -14,15 +15,17 @@ func Email(injector do.Injector) {
 	/*
 		服务商
 	*/
-	do.Provide(injector, email_provider2.NewSmtpIMPL)
-	err := do.As[*email_provider2.SmtpIMPL, email_provider2.EmailProviderIF](injector)
-	if err != nil {
-		panic(err)
-	}
+	do.Provide(injector, func(injector do.Injector) (*email_provider.SmtpIMPL, error) {
+		appCfg := do.MustInvoke[*app_config.AppConfig](injector)
+		return email_provider.NewSmtpIMPL(appCfg)
+	})
 
 	/*
 		邮件服务
 	*/
-	do.Provide(injector, email.NewEmailSvc)
+	do.Provide(injector, func(injector do.Injector) (*email.EmailSvc, error) {
+		emailIsp := do.MustInvoke[*email_provider.SmtpIMPL](injector)
+		return email.NewEmailSvc(emailIsp)
+	})
 
 }

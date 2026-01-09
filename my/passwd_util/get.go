@@ -1,6 +1,6 @@
 package passwd_util
 
-func NewPasswordUtil() (passwordUtil *PasswordUtilImpl, err error) {
-	passwordUtil = &PasswordUtilImpl{}
+func NewPasswordUtil() (passwordUtil *PasswdUtilImpl, err error) {
+	passwordUtil = &PasswdUtilImpl{}
 	return
 }

@@ -3,7 +3,6 @@ package ioc
 import (
 	"dxxproject/config_prepare/app_config"
 	"dxxproject/config_prepare/start_config"
-	"dxxproject/internal/verify_code"
 	"dxxproject/my/jwt_utils/jwt_user"
 	"dxxproject/my/my_logger"
 	"dxxproject/my/passwd_util"
@@ -32,7 +31,7 @@ func Inject() (injector do.Injector, err error) {
 
 	injectModule(injector) //注入服务
 
-	verify_code.Provide(injector) //注入handler
+	VerifyCode(injector) //注入handler
 
 	gin.Provide(injector) //注入gin
 
@@ -75,29 +74,17 @@ func injectPkg(injector do.Injector) {
 		appConfig := do.MustInvoke[*app_config.AppConfig](injector)
 		return snowflake_ok.NewSnowFlake(startConfig, appConfig)
 	})
-	err := do.As[*snowflake_ok.SnowflakeIMPL, snowflake_ok.SnowflakeIface](injector)
-	if err != nil {
-		panic(err)
-	}
 
 	//密码工具
-	do.Provide(injector, func(injector do.Injector) (*passwd_util.PasswordUtilImpl, error) {
+	do.Provide(injector, func(injector do.Injector) (*passwd_util.PasswdUtilImpl, error) {
 		return passwd_util.NewPasswordUtil()
 	}) //密码加密
-	err = do.As[*passwd_util.PasswordUtilImpl, passwd_util.PasswordUtilIface](injector)
-	if err != nil {
-		panic(err)
-	}
 
 	// 自定义 logger
 	do.Provide(injector, func(injector do.Injector) (*my_logger.MyLoggerZapImpl, error) {
 		zapLogger := do.MustInvoke[*zap.Logger](injector)
 		return my_logger.NewMyLogger(zapLogger)
 	})
-	err = do.As[*my_logger.MyLoggerZapImpl, my_logger.MyLoggerIF](injector)
-	if err != nil {
-		panic(err)
-	} //自定义的logger
 
 	// gorm db
 	do.Provide(injector, func(injector do.Injector) (*gorm.DB, error) {

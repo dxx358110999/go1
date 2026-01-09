@@ -5,7 +5,6 @@ import (
 	"dxxproject/my/my_err"
 	"github.com/pkg/errors"
 	"github.com/redis/go-redis/v9"
-	"github.com/samber/do/v2"
 	"time"
 )
 
@@ -35,8 +34,7 @@ func (r *VerifyCodeCache) VerifyCodeSet(ctx context.Context,
 	return
 }
 
-func NewVerifyCodeCache(injector do.Injector) (*VerifyCodeCache, error) {
-	redisClient := do.MustInvoke[*redis.Client](injector) //redis client
+func NewVerifyCodeCache(redisClient *redis.Client) (*VerifyCodeCache, error) {
 	vc := &VerifyCodeCache{
 		redisClient: redisClient,
 	}

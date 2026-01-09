@@ -3,7 +3,6 @@ package sms
 import (
 	"context"
 	"dxxproject/internal/sms/sms_provider"
-	"github.com/samber/do/v2"
 	"sync"
 	"sync/atomic"
 )
@@ -38,8 +37,7 @@ func (r *SvcSmsFailOver) SendSms(ctx context.Context, info sms_provider.SmsSendI
 	return
 }
 
-func NewSmsFailOverSvc(injector do.Injector) (*SvcSmsFailOver, error) {
-	smsProviders := do.MustInvoke[[]sms_provider.SmsProviderIF](injector)
+func NewSmsFailOverSvc(smsProviders []sms_provider.SmsProviderIF) (*SvcSmsFailOver, error) {
 	//if err != nil {
 	//	return nil, err
 	//}

@@ -11,7 +11,6 @@ import (
 	"dxxproject/my/my_err"
 	"fmt"
 	"github.com/pkg/errors"
-	"github.com/samber/do/v2"
 	"time"
 )
 
@@ -129,14 +128,15 @@ func (r *VerifyCodeSvc) Verify(ctx context.Context,
 	return nil
 }
 
-func NewVerifyCodeSvc(injector do.Injector) (*VerifyCodeSvc, error) {
-	rateLimiter := do.MustInvoke[*rate_limit.RateLimitSvc](injector)
-	vcCache := do.MustInvoke[*cache.VerifyCodeCache](injector)
-	emailSvc := do.MustInvoke[*email.EmailSvc](injector)
-	smsSvc := do.MustInvoke[sms.SvcSmsIface](injector)
+func NewVerifyCodeSvc(
+	limitSvc *rate_limit.RateLimitSvc,
+	emailSvc *email.EmailSvc,
+	smsSvc sms.SvcSmsIface,
+	vcCache *cache.VerifyCodeCache,
+) (*VerifyCodeSvc, error) {
 
 	vc := &VerifyCodeSvc{
-		limitSvc: rateLimiter,
+		limitSvc: limitSvc,
 		emailSvc: emailSvc,
 		smsSvc:   smsSvc,
 		vcCache:  vcCache,

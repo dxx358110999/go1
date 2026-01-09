@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	dysmsapi20170525 "github.com/alibabacloud-go/dysmsapi-20170525/v5/client"
 	"github.com/alibabacloud-go/tea/tea"
-	"github.com/samber/do/v2"
 )
 
 type AliSmsImpl struct {
@@ -50,9 +49,8 @@ func (rec *AliSmsImpl) SendSms(ctx context.Context, info SmsSendInfo) (err error
 
 var _ SmsProviderIF = new(AliSmsImpl)
 
-func NewAliSmsImpl(injector do.Injector) (impl *AliSmsImpl, err error) {
-	cfg := do.MustInvoke[*app_config.AppConfig](injector).AliSms
-
+func NewAliSmsImpl(appCfg *app_config.AppConfig) (impl *AliSmsImpl, err error) {
+	cfg := appCfg.AliSms
 	err, sdk := NewSmsAliSdk(cfg)
 	impl = &AliSmsImpl{
 		sdk: sdk,

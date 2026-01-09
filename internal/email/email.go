@@ -2,7 +2,6 @@ package email
 
 import (
 	"dxxproject/internal/email/email_provider"
-	"github.com/samber/do/v2"
 )
 
 type EmailSvc struct {
@@ -13,11 +12,7 @@ func (r *EmailSvc) SendEmail(toEmail string, subject string, body string) error 
 	return r.emailIsp.SendEmail(toEmail, subject, body)
 }
 
-func NewEmailSvc(injector do.Injector) (*EmailSvc, error) {
-	emailIsp, err := do.Invoke[*email_provider.SmtpIMPL](injector)
-	if err != nil {
-		return nil, err
-	}
+func NewEmailSvc(emailIsp *email_provider.SmtpIMPL) (*EmailSvc, error) {
 	email := &EmailSvc{
 		emailIsp: emailIsp,
 	}

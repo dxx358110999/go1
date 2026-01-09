@@ -27,14 +27,14 @@ func User(injector do.Injector) {
 		return dao.NewUserDao(db)
 	})
 	do.Provide(injector, func(injector do.Injector) (*repo.UserRepo, error) {
-		myLogger := do.MustInvoke[my_logger.MyLoggerIF](injector)
+		myLogger := do.MustInvoke[*my_logger.MyLoggerZapImpl](injector)
 		userDao := do.MustInvoke[*dao.UserDao](injector)
 		userCache := do.MustInvoke[*cache.User](injector)
 		return repo.NewUserRepo(myLogger, userDao, userCache)
 	})
 	do.Provide(injector, func(injector do.Injector) (*svc.UserSvc, error) {
-		passwordUtil := do.MustInvoke[passwd_util.PasswordUtilIface](injector)
-		snow := do.MustInvoke[snowflake_ok.SnowflakeIface](injector)
+		passwordUtil := do.MustInvoke[*passwd_util.PasswdUtilImpl](injector)
+		snow := do.MustInvoke[*snowflake_ok.SnowflakeIMPL](injector)
 		userRepo := do.MustInvoke[*repo.UserRepo](injector)
 		jwtUser := do.MustInvoke[*jwt_user.UserImpl](injector)
 		verifyCodeSvc := do.MustInvoke[*vcSvc.VerifyCodeSvc](injector)

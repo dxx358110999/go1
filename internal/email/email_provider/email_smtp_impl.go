@@ -4,7 +4,6 @@ import (
 	"crypto/tls"
 	"dxxproject/config_prepare/app_config"
 	"fmt"
-	"github.com/samber/do/v2"
 	"net/smtp"
 )
 
@@ -89,8 +88,8 @@ func (rec *SmtpIMPL) SendEmail(toEmail string, subject string, body string) erro
 	return nil
 }
 
-func NewSmtpIMPL(injector do.Injector) (sender *SmtpIMPL, err error) {
-	cfg := do.MustInvoke[*app_config.AppConfig](injector).EmailSmtp
+func NewSmtpIMPL(appCfg *app_config.AppConfig) (sender *SmtpIMPL, err error) {
+	cfg := appCfg.EmailSmtp
 	sender = &SmtpIMPL{
 		SmtpServer:  cfg.SmtpHost,
 		SmtpPort:    cfg.SmtpPort,

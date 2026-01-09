@@ -4,12 +4,12 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type PasswordUtilImpl struct {
+type PasswdUtilImpl struct {
 }
 
-var _ PasswordUtilIface = (*PasswordUtilImpl)(nil)
+var _ PasswordUtilIface = (*PasswdUtilImpl)(nil)
 
-func (rec *PasswordUtilImpl) Encrypt(pass string) (err error, enPass string) {
+func (rec *PasswdUtilImpl) Encrypt(pass string) (err error, enPass string) {
 	bytes, err := bcrypt.GenerateFromPassword(
 		[]byte(pass), bcrypt.DefaultCost)
 	if err != nil {
@@ -18,7 +18,7 @@ func (rec *PasswordUtilImpl) Encrypt(pass string) (err error, enPass string) {
 	return nil, string(bytes)
 }
 
-func (rec *PasswordUtilImpl) Compare(enPass, pass string) (err error) {
+func (rec *PasswdUtilImpl) Compare(enPass, pass string) (err error) {
 	err = bcrypt.CompareHashAndPassword(
 		[]byte(enPass),
 		[]byte(pass),
