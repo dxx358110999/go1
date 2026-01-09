@@ -1,11 +1,12 @@
-package email
+package ioc
 
 import (
+	"dxxproject/internal/email"
 	email_provider2 "dxxproject/internal/email/email_provider"
 	"github.com/samber/do/v2"
 )
 
-func Provide(injector do.Injector) {
+func Email(injector do.Injector) {
 	/*
 		邮件发送服务
 	*/
@@ -22,6 +23,6 @@ func Provide(injector do.Injector) {
 	/*
 		邮件服务
 	*/
-	do.Provide(injector, NewEmailSvc)
+	do.Provide(injector, email.NewEmailSvc)
 
 }

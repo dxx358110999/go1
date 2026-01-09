@@ -1,4 +1,4 @@
-package user
+package ioc
 
 import (
 	"dxxproject/internal/user/cache"
@@ -16,7 +16,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func Provide(injector do.Injector) {
+func User(injector do.Injector) {
 	redisClient := do.MustInvoke[*redis.Client](injector)
 	db := do.MustInvoke[*gorm.DB](injector)
 	myLogger := do.MustInvoke[my_logger.MyLoggerIF](injector)

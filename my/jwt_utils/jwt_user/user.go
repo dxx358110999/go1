@@ -4,7 +4,6 @@ import (
 	"dxxproject/config_prepare/app_config"
 	"dxxproject/my/my_err"
 	"github.com/pkg/errors"
-	"github.com/samber/do/v2"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -119,9 +118,8 @@ func (r *UserImpl) RefreshValid(tokenString string) (info *UserInfo, err error) 
 
 	return
 }
-func NewJwtUserImpl(injector do.Injector) (impl *UserImpl, err error) {
-	cfg := do.MustInvoke[*app_config.AppConfig](injector).JwtUser
-
+func NewJwtUserImpl(appCfg *app_config.AppConfig) (impl *UserImpl, err error) {
+	cfg := appCfg.JwtUser
 	impl = &UserImpl{
 		accessExpire:  time.Duration(cfg.AccessExpire) * time.Minute,
 		refreshExpire: time.Duration(cfg.RefreshExpire) * time.Minute,
@@ -130,10 +128,6 @@ func NewJwtUserImpl(injector do.Injector) (impl *UserImpl, err error) {
 	}
 
 	return
-}
-
-func Provide(injector do.Injector) {
-	do.Provide(injector, NewJwtUserImpl)
 }
 
 //var _ UserIface = new(UserImpl) //检查实现

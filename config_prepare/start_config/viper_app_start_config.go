@@ -2,7 +2,6 @@ package start_config
 
 import (
 	"fmt"
-	"github.com/samber/do/v2"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -98,7 +97,7 @@ func newStartConfig() (startCfg *StartConfig, err error) {
 	return
 }
 
-func NewStartConfig(injector do.Injector) (startCfg *StartConfig, err error) {
+func NewStartConfig() (startCfg *StartConfig, err error) {
 	config, err := newStartConfig()
 	if err != nil {
 		panic(err)
@@ -106,8 +105,4 @@ func NewStartConfig(injector do.Injector) (startCfg *StartConfig, err error) {
 
 	startCfg = config
 	return
-}
-
-func Provide(injector do.Injector) {
-	do.Provide(injector, NewStartConfig) //读取本地启动配置
 }

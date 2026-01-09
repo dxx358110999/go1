@@ -1,11 +1,12 @@
-package sms
+package ioc
 
 import (
+	"dxxproject/internal/sms"
 	sms_provider2 "dxxproject/internal/sms/sms_provider"
 	"github.com/samber/do/v2"
 )
 
-func Provide(injector do.Injector) {
+func Sms(injector do.Injector) {
 	/*
 		sms
 		短信服务
@@ -43,11 +44,11 @@ func Provide(injector do.Injector) {
 	*/
 	//_ = do.As[*ali_sms.AliSmsImpl, sms_provider.SvcSmsIface](injector)
 
-	//do.Provide(injector, svc_sms.NewSms)
+	//do.Sms(injector, svc_sms.NewSms)
 	//_ = do.As[svc_sms.SmsSvc, svc_sms.SvcSmsIface](injector)
 
-	do.Provide(injector, NewSmsFailOverSvc)
-	err = do.As[*SvcSmsFailOver, SvcSmsIface](injector)
+	do.Provide(injector, sms.NewSmsFailOverSvc)
+	err = do.As[*sms.SvcSmsFailOver, sms.SvcSmsIface](injector)
 	if err != nil {
 		panic(err)
 

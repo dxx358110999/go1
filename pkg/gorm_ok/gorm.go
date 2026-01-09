@@ -1,16 +1,15 @@
-package gorm_db
+package gorm_ok
 
 import (
 	"dxxproject/config_prepare/app_config"
 	"fmt"
 	"github.com/pkg/errors"
-	"github.com/samber/do/v2"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-func NewGormDb(injector do.Injector) (db *gorm.DB, err error) {
-	cfg := do.MustInvoke[*app_config.AppConfig](injector).MysqlConfig
+func NewGormDb(appCfg *app_config.AppConfig) (db *gorm.DB, err error) {
+	cfg := appCfg.MysqlConfig
 
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -34,8 +33,4 @@ func NewGormDb(injector do.Injector) (db *gorm.DB, err error) {
 	}
 
 	return
-}
-
-func Provide(injector do.Injector) {
-	do.Provide(injector, NewGormDb)
 }

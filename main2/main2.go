@@ -2,7 +2,7 @@ package main2
 
 import (
 	"dxxproject/config_prepare/app_config"
-	"dxxproject/main2/ioc"
+	"dxxproject/ioc"
 	"dxxproject/pkg/nacos_ok"
 	"fmt"
 	"github.com/gin-gonic/gin"

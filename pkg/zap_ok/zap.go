@@ -3,7 +3,6 @@ package zap_ok
 import (
 	"dxxproject/config_prepare/app_config"
 	"github.com/natefinch/lumberjack"
-	"github.com/samber/do/v2"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
@@ -29,13 +28,12 @@ func getLogWriter(filename string, maxSize, maxBackup, maxAge int) zapcore.Write
 	return zapcore.AddSync(lumberJackLogger)
 }
 
-func NewZapLogger(injector do.Injector) (zapLogger *zap.Logger, err error) {
+func NewZapLogger(appCfg *app_config.AppConfig) (zapLogger *zap.Logger, err error) {
 	/*
 		初始化logger
 	*/
-
-	cfg := do.MustInvoke[*app_config.AppConfig](injector).LogConfig
-	mode := do.MustInvoke[*app_config.AppConfig](injector).Mode
+	mode := appCfg.Mode
+	cfg := appCfg.LogConfig
 
 	writeSyncer := getLogWriter(cfg.Filename, cfg.MaxSize, cfg.MaxBackups, cfg.MaxAge)
 	encoder := getEncoder()
@@ -65,8 +63,4 @@ func NewZapLogger(injector do.Injector) (zapLogger *zap.Logger, err error) {
 
 	zapLogger = logger
 	return
-}
-
-func Provide(injector do.Injector) {
-	do.Provide(injector, NewZapLogger)
 }

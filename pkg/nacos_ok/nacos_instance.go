@@ -9,7 +9,6 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
-	"github.com/samber/do/v2"
 	"log"
 )
 
@@ -132,24 +131,21 @@ func (r *NacosInstance) Deregister() (err error) {
 //	return
 //}
 
-func NewNacosInstance(injector do.Injector) (*NacosInstance, error) {
+func NewNacosInstance(startCfg *start_config.StartConfig) (*NacosInstance, error) {
 	/*
 		需要考虑读取环境
 	*/
 
-	//取出依赖
-	startConfig := do.MustInvoke[*start_config.StartConfig](injector)
-
 	//读取本机ip
-	err, ip := toolkit.GetOutboundIP(fmt.Sprintf("%s:%d", startConfig.Address, startConfig.Port))
+	err, ip := toolkit.GetOutboundIP(fmt.Sprintf("%s:%d", startCfg.Address, startCfg.Port))
 	localIp := ip.String()
 
-	serverConfig, err := NewNacosServerConfig(startConfig)
+	serverConfig, err := NewNacosServerConfig(startCfg)
 	if err != nil {
 		return nil, err
 	}
 
-	clientConfig, err := NewNacosClientConfig(startConfig, localIp)
+	clientConfig, err := NewNacosClientConfig(startCfg, localIp)
 	if err != nil {
 		return nil, err
 	}
@@ -166,8 +162,4 @@ func NewNacosInstance(injector do.Injector) (*NacosInstance, error) {
 		return nil, err
 	}
 	return instance, nil
-}
-
-func Provide(injector do.Injector) {
-	do.Provide(injector, NewNacosInstance)
 }

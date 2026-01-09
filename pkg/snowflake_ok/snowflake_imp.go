@@ -4,7 +4,6 @@ import (
 	"dxxproject/config_prepare/app_config"
 	"dxxproject/config_prepare/start_config"
 	"github.com/bwmarrin/snowflake"
-	"github.com/samber/do/v2"
 	"time"
 )
 
@@ -18,11 +17,11 @@ func (s *SnowflakeIMPL) GenSnowFlakeID() int64 {
 
 var _ SnowflakeIface = &SnowflakeIMPL{}
 
-func NewSnowFlake(injector do.Injector) (snow *SnowflakeIMPL, err error) {
-	appConfig := do.MustInvoke[*app_config.AppConfig](injector)
-	startConfig := do.MustInvoke[*start_config.StartConfig](injector)
-	startTime := appConfig.StartTime
-	machineID := startConfig.MachineID
+func NewSnowFlake(startCfg *start_config.StartConfig,
+	appCfg *app_config.AppConfig) (snow *SnowflakeIMPL, err error) {
+
+	startTime := appCfg.StartTime
+	machineID := startCfg.MachineID
 
 	var timeStart time.Time
 	timeStart, err = time.Parse("2006-01-02", startTime)
@@ -37,12 +36,4 @@ func NewSnowFlake(injector do.Injector) (snow *SnowflakeIMPL, err error) {
 
 	snow = &SnowflakeIMPL{node}
 	return
-}
-
-func Provide(injector do.Injector) {
-	do.Provide(injector, NewSnowFlake)
-	err := do.As[*SnowflakeIMPL, SnowflakeIface](injector)
-	if err != nil {
-		panic(err)
-	}
 }

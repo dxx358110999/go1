@@ -1,7 +1,6 @@
 package my_logger
 
 import (
-	"github.com/samber/do/v2"
 	"go.uber.org/zap"
 )
 
@@ -44,18 +43,9 @@ func (r *MyLoggerZapImpl) Error(msg string, others ...LogField) {
 
 var _ MyLoggerIF = new(MyLoggerZapImpl)
 
-func NewMyLogger(injector do.Injector) (*MyLoggerZapImpl, error) {
-	zapLogger := do.MustInvoke[*zap.Logger](injector)
+func NewMyLogger(zapLogger *zap.Logger) (*MyLoggerZapImpl, error) {
 	myLogger := &MyLoggerZapImpl{
 		logger: zapLogger,
 	}
 	return myLogger, nil
-}
-
-func Provide(injector do.Injector) {
-	do.Provide(injector, NewMyLogger)
-	err := do.As[*MyLoggerZapImpl, MyLoggerIF](injector)
-	if err != nil {
-		panic(err)
-	}
 }
