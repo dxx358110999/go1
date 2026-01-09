@@ -6,4 +6,5 @@ git config --global core.autocrlf input
 
 git rm --cached -r .idea
 git rm --cached -r web_app.log
+git rm --cached -r conf
 git commit -m "rm .idea"
