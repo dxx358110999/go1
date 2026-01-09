@@ -13,6 +13,7 @@ import (
 	"dxxproject/pkg/zap_ok"
 	"github.com/redis/go-redis/v9"
 	"github.com/samber/do/v2"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
