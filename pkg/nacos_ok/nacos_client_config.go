@@ -4,7 +4,7 @@ import (
 	"dxxproject/config_prepare/start_config"
 )
 
-func NewNacosClientConfig(startConfig *start_config.StartConfig, localIp string) (config *NacosClientConfig, err error) {
+func NewNacosClientConfig(startConfig *start_config.Config, localIp string) (config *NacosClientConfig, err error) {
 
 	config = &NacosClientConfig{
 		LocalIp:     localIp,

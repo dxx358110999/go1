@@ -21,7 +21,7 @@ func Main2() (err error) {
 		return err
 	}
 	nacosInstance := do.MustInvoke[*nacos_ok.NacosInstance](injector)
-	appConfig := do.MustInvoke[*app_config.AppConfig](injector)
+	appConfig := do.MustInvoke[*app_config.Config](injector)
 	engine := do.MustInvoke[*gin.Engine](injector)
 
 	redClient := do.MustInvoke[*redis.Client](injector) //退出时关闭连接

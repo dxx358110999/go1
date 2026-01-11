@@ -44,9 +44,9 @@ NacosPort
 //	return envCfg, nil
 //}
 
-func newStartConfig() (startCfg *StartConfig, err error) {
+func newStartConfig() (startCfg *Config, err error) {
 	//默认配置
-	startCfg = &StartConfig{
+	startCfg = &Config{
 		MachineID: 1,
 		Port:      8080,
 		Nacos: &Nacos{
@@ -97,7 +97,7 @@ func newStartConfig() (startCfg *StartConfig, err error) {
 	return
 }
 
-func NewStartConfig() (startCfg *StartConfig, err error) {
+func NewStartConfig() (startCfg *Config, err error) {
 	config, err := newStartConfig()
 	if err != nil {
 		panic(err)

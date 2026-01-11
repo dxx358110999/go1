@@ -118,7 +118,7 @@ func (r *UserImpl) RefreshValid(tokenString string) (info *UserInfo, err error) 
 
 	return
 }
-func NewJwtUserImpl(appCfg *app_config.AppConfig) (impl *UserImpl, err error) {
+func NewJwtUserImpl(appCfg *app_config.Config) (impl *UserImpl, err error) {
 	cfg := appCfg.JwtUser
 	impl = &UserImpl{
 		accessExpire:  time.Duration(cfg.AccessExpire) * time.Minute,

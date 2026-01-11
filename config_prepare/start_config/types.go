@@ -16,7 +16,7 @@ type Nacos struct {
 	ServiceName    string `mapstructure:"serviceName"`
 }
 
-type StartConfig struct {
+type Config struct {
 	MachineID int64  `mapstructure:"machine_id"`
 	Port      uint64 `mapstructure:"port"`
 

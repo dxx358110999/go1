@@ -1,13 +1,13 @@
 package route
 
 import (
-	"dxxproject/internal/verify_code/hdl"
+	"dxxproject/internal/module/verify_code/vc_handler"
 	"github.com/gin-gonic/gin"
 	"github.com/samber/do/v2"
 )
 
 func VerifyCodeRoute(injector do.Injector, prefixGroup *gin.RouterGroup) {
-	vcHandlers := do.MustInvoke[*hdl.VerifyCodeHdl](injector)
+	vcHandlers := do.MustInvoke[*vc_handler.VerifyCodeHdl](injector)
 
 	group := prefixGroup.Group("/code")
 	group.POST("/registerCodeSendEmail", vcHandlers.SendUserRegisterCodeByEmail)

@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func NewGormDb(appCfg *app_config.AppConfig) (db *gorm.DB, err error) {
+func NewGormDb(appCfg *app_config.Config) (db *gorm.DB, err error) {
 	cfg := appCfg.MysqlConfig
 
 	dsn := fmt.Sprintf(

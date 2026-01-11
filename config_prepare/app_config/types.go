@@ -47,7 +47,7 @@ type EmailSmtp struct {
 	AuthCode    string `yaml:"auth_code"`    // QQ邮箱授权码（不是登录密码）
 }
 
-type AppConfig struct {
+type Config struct {
 	Name      string `yaml:"name"`
 	Mode      string `yaml:"mode"`
 	Version   string `yaml:"version"`

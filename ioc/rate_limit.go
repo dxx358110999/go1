@@ -1,7 +1,7 @@
 package ioc
 
 import (
-	"dxxproject/internal/rate_limit"
+	"dxxproject/internal/module/rate_limit/rate_limit_svc"
 	"dxxproject/pkg/rate_limiter"
 	"github.com/go-redis/redis_rate/v10"
 	"github.com/redis/go-redis/v9"
@@ -20,8 +20,8 @@ func RateLimit(injector do.Injector) {
 	})
 
 	//限速服务
-	do.Provide(injector, func(injector do.Injector) (*rate_limit.RateLimitSvc, error) {
+	do.Provide(injector, func(injector do.Injector) (*rate_limit_svc.RateLimitSvc, error) {
 		limiter := do.MustInvoke[*redis_rate.Limiter](injector)
-		return rate_limit.NewRateLimit(limiter)
+		return rate_limit_svc.NewRateLimit(limiter)
 	})
 }

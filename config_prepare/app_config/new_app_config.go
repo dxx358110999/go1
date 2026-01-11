@@ -6,8 +6,8 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func contentToAppConfig(content string) (appConfig *AppConfig, err error) {
-	appConfig = &AppConfig{}
+func contentToAppConfig(content string) (appConfig *Config, err error) {
+	appConfig = &Config{}
 	err = yaml.Unmarshal([]byte(content), appConfig)
 	if err != nil {
 		return
@@ -16,7 +16,7 @@ func contentToAppConfig(content string) (appConfig *AppConfig, err error) {
 	return
 }
 
-func NewAppConfig(instance *nacos_ok.NacosInstance) (appConfig *AppConfig, err error) {
+func NewAppConfig(instance *nacos_ok.NacosInstance) (appConfig *Config, err error) {
 	content, err := instance.ConfigClient.GetConfig(vo.ConfigParam{
 		DataId: instance.ClientConfig.DataId,
 		Group:  instance.ClientConfig.GroupName,

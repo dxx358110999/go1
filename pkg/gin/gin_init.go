@@ -9,7 +9,7 @@ import (
 )
 
 func NewGinServer(injector do.Injector) (engine *gin.Engine, err error) {
-	appConfig := do.MustInvoke[*app_config.AppConfig](injector)
+	appConfig := do.MustInvoke[*app_config.Config](injector)
 
 	mode := appConfig.Mode
 	if mode == gin.ReleaseMode {

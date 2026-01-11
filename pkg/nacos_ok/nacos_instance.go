@@ -131,7 +131,7 @@ func (r *NacosInstance) Deregister() (err error) {
 //	return
 //}
 
-func NewNacosInstance(startCfg *start_config.StartConfig) (*NacosInstance, error) {
+func NewNacosInstance(startCfg *start_config.Config) (*NacosInstance, error) {
 	/*
 		需要考虑读取环境
 	*/

@@ -28,7 +28,7 @@ func getLogWriter(filename string, maxSize, maxBackup, maxAge int) zapcore.Write
 	return zapcore.AddSync(lumberJackLogger)
 }
 
-func NewZapLogger(appCfg *app_config.AppConfig) (zapLogger *zap.Logger, err error) {
+func NewZapLogger(appCfg *app_config.Config) (zapLogger *zap.Logger, err error) {
 	/*
 		初始化logger
 	*/

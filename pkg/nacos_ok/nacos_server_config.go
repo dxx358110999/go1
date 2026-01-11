@@ -4,7 +4,7 @@ import (
 	"dxxproject/config_prepare/start_config"
 )
 
-func NewNacosServerConfig(startConfig *start_config.StartConfig) (config *NacosServerConfig, err error) {
+func NewNacosServerConfig(startConfig *start_config.Config) (config *NacosServerConfig, err error) {
 	var address string
 	var port uint64
 	address = startConfig.Nacos.Address

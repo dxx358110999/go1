@@ -2,8 +2,8 @@ package ioc
 
 import (
 	"dxxproject/config_prepare/app_config"
-	"dxxproject/internal/sms"
-	"dxxproject/internal/sms/sms_provider"
+	"dxxproject/internal/module/sms/sms_svc"
+	"dxxproject/internal/module/sms/sms_svc/sms_provider"
 	"github.com/samber/do/v2"
 )
 
@@ -20,7 +20,7 @@ func Sms(injector do.Injector) {
 
 	//注入多个sms服务商
 	do.Provide(injector, func(injector do.Injector) ([]sms_provider.SmsProviderIF, error) {
-		appCfg := do.MustInvoke[*app_config.AppConfig](injector)
+		appCfg := do.MustInvoke[*app_config.Config](injector)
 
 		fakeIsp, err := sms_provider.NewFakeIsp()
 		if err != nil {
@@ -48,10 +48,10 @@ func Sms(injector do.Injector) {
 	//do.Sms(injector, svc_sms.NewSms)
 	//_ = do.As[svc_sms.SmsSvc, svc_sms.SvcSmsIface](injector)
 
-	do.Provide(injector, func(injector do.Injector) (*sms.SvcSmsFailOver, error) {
+	do.Provide(injector, func(injector do.Injector) (*sms_svc.SvcSmsFailOver, error) {
 		smsProviders := do.MustInvoke[[]sms_provider.SmsProviderIF](injector)
 
-		return sms.NewSmsFailOverSvc(smsProviders)
+		return sms_svc.NewSmsFailOverSvc(smsProviders)
 	})
 
 }

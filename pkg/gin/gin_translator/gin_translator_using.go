@@ -1,7 +1,7 @@
 package gin_translator
 
 import (
-	"dxxproject/agreed/dto"
+	"dxxproject/internal/module/user/user_hdl"
 	"github.com/go-playground/validator/v10"
 	"reflect"
 	"strings"
@@ -25,7 +25,7 @@ func (r *TranslatorMyValidator) SignUpParametersValidation(level validator.Struc
 	/*
 		自定义SignUpParam结构体校验函数
 	*/
-	userSignup := level.Current().Interface().(dto.UserSignup)
+	userSignup := level.Current().Interface().(user_hdl.UserSignup)
 
 	if userSignup.Password != userSignup.RePassword {
 		// 输出错误提示信息，最后一个参数就是传递的param
